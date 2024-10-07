@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.src.todojpa.dto.ScheduleCreateDto;
 import org.src.todojpa.dto.ScheduleResponseDto;
 import org.src.todojpa.entity.Schedule;
 import org.src.todojpa.repository.ScheduleRepository;
@@ -41,5 +42,13 @@ public class ScheduleService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일정입니다."));
 
         return ScheduleResponseDto.from(schedule);
+    }
+
+    public ScheduleResponseDto createSchedule(ScheduleCreateDto req) {
+        Schedule schedule = Schedule.from(req);
+
+        Schedule savedSchedule = this.scheduleRepository.save(schedule);
+
+        return ScheduleResponseDto.from(savedSchedule);
     }
 }

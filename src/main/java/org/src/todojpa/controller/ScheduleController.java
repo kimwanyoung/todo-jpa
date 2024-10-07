@@ -3,8 +3,10 @@ package org.src.todojpa.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.src.todojpa.dto.ScheduleCreateDto;
 import org.src.todojpa.dto.ScheduleResponseDto;
 import org.src.todojpa.service.ScheduleService;
 
