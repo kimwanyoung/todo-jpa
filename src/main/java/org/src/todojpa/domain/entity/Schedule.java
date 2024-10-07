@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.src.todojpa.domain.dto.ScheduleCreateDto;
+import org.src.todojpa.domain.dto.ScheduleUpdateDto;
 
 @Getter
 @Entity
@@ -33,5 +34,10 @@ public class Schedule extends Timestamp {
                 .title(dto.getTitle())
                 .contents(dto.getContents())
                 .build();
+    }
+
+    public void update(ScheduleUpdateDto dto) {
+        this.title = dto.getTitle();
+        this.contents = dto.getContents();
     }
 }

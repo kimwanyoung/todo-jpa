@@ -1,5 +1,6 @@
 package org.src.todojpa.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.src.todojpa.domain.dto.ScheduleCreateDto;
 import org.src.todojpa.domain.dto.ScheduleResponseDto;
+import org.src.todojpa.domain.dto.ScheduleUpdateDto;
 import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.repository.ScheduleRepository;
 
@@ -36,9 +38,7 @@ public class ScheduleService {
     }
 
     public ScheduleResponseDto retrieveScheduleById(Long id) {
-        Schedule schedule = this.scheduleRepository
-                .findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일정입니다."));
+        Schedule schedule = findSchedule(id);
 
         return ScheduleResponseDto.from(schedule);
     }
@@ -49,5 +49,20 @@ public class ScheduleService {
         Schedule savedSchedule = this.scheduleRepository.save(schedule);
 
         return ScheduleResponseDto.from(savedSchedule);
+    }
+
+    @Transactional
+    public ScheduleResponseDto updateScheduleById(Long id, ScheduleUpdateDto req) {
+        Schedule schedule = findSchedule(id);
+
+        schedule.update(req);
+
+        return ScheduleResponseDto.from(schedule);
+    }
+
+    private Schedule findSchedule(Long id) {
+        return this.scheduleRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일정입니다."));
     }
 }
