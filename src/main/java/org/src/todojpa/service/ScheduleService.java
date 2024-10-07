@@ -64,6 +64,7 @@ public class ScheduleService {
     public ScheduleResponseDto deleteScheduleById(Long id) {
         Schedule schedule = findSchedule(id);
 
+        // TODO: 추후 comment entity 추가되면, 댓글도 함께 삭제되어야함
         this.scheduleRepository.delete(schedule);
 
         return ScheduleResponseDto.from(schedule);
