@@ -1,6 +1,7 @@
 package org.src.todojpa.dto;
 
 import lombok.*;
+import org.src.todojpa.entity.Schedule;
 
 import java.time.LocalDateTime;
 
@@ -14,4 +15,15 @@ public class ScheduleResponseDto {
     private String contents;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+
+    public static ScheduleResponseDto from(Schedule schedule) {
+        return ScheduleResponseDto.builder()
+                .id(schedule.getId())
+                .title(schedule.getTitle())
+                .contents(schedule.getContents())
+                .username(schedule.getUsername())
+                .createdAt(schedule.getCreatedAt())
+                .modifiedAt(schedule.getModifiedAt())
+                .build();
+    }
 }

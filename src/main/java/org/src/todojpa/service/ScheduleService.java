@@ -10,6 +10,7 @@ import org.src.todojpa.entity.Schedule;
 import org.src.todojpa.repository.ScheduleRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +36,10 @@ public class ScheduleService {
     }
 
     public ScheduleResponseDto retrieveScheduleById(Long id) {
+        Schedule schedule = this.scheduleRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일정입니다."));
+
+        return ScheduleResponseDto.from(schedule);
     }
 }
