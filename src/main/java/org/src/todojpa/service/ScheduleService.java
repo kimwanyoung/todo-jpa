@@ -18,7 +18,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     public Page<ScheduleResponseDto> retrieveSchedules(Pageable pageable) {
-        Page<Schedule> schedules = this.scheduleRepository.findAllBy(pageable);
+        Page<Schedule> schedules = this.scheduleRepository.findAll(pageable);
 
         List<ScheduleResponseDto> scheduleResponseDtos = schedules.getContent().stream()
                 .map(schedule -> ScheduleResponseDto.builder()
@@ -32,5 +32,8 @@ public class ScheduleService {
                 .toList();
 
         return new PageImpl<>(scheduleResponseDtos, pageable, schedules.getTotalPages());
+    }
+
+    public ScheduleResponseDto retrieveScheduleById(Long id) {
     }
 }
