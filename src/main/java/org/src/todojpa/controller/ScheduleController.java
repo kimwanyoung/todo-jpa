@@ -1,14 +1,12 @@
 package org.src.todojpa.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.src.todojpa.entity.Schedule;
-
-import java.util.List;
+import org.src.todojpa.dto.ScheduleResponseDto;
+import org.src.todojpa.service.ScheduleService;
 
 
 @RestController
@@ -19,30 +17,30 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @GetMapping
-    public ResponseEntity<Page<List<Schedule>>> retrieveSchedules(Pageable pageable) {
-        return ResponseEntity.ok(this.scheduleService.retrieveSchedules(pageable));
+    public ResponseEntity<PagedModel<ScheduleResponseDto>> retrieveSchedules(Pageable pageable) {
+        return ResponseEntity.ok(new PagedModel<>(this.scheduleService.retrieveSchedules(pageable)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Schedule> retrieveSchedule(@PathVariable Long id) {
+    public ResponseEntity<ScheduleResponseDto> retrieveSchedule(@PathVariable Long id) {
         return ResponseEntity.ok(this.scheduleService.retrieveScheduleById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Schedule> createSchedule(@RequestBody Schedule schedule) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.scheduleService.createSchedule());
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleCreateDto req) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.scheduleService.createSchedule(req));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Schedule> updateSchedule(
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
-            @RequestBody Schedule schedule
+            @RequestBody ScheduleUpdateDto req
     ) {
-        return ResponseEntity.ok(this.scheduleService.updateScheduleById(id, schedule));
+        return ResponseEntity.ok(this.scheduleService.updateScheduleById(id, req));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Schedule> deleteSchedule(@PathVariable Long id) {
+    public ResponseEntity<ScheduleResponseDto> deleteSchedule(@PathVariable Long id) {
         return ResponseEntity.ok(this.scheduleService.deleteScheduleById(id));
     }
 }
