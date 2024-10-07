@@ -1,11 +1,11 @@
-package org.src.todojpa.entity;
+package org.src.todojpa.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.src.todojpa.dto.ScheduleCreateDto;
+import org.src.todojpa.domain.dto.ScheduleCreateDto;
 
 @Getter
 @Entity

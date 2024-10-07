@@ -5,13 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.src.todojpa.dto.ScheduleCreateDto;
-import org.src.todojpa.dto.ScheduleResponseDto;
-import org.src.todojpa.entity.Schedule;
+import org.src.todojpa.domain.dto.ScheduleCreateDto;
+import org.src.todojpa.domain.dto.ScheduleResponseDto;
+import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.repository.ScheduleRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

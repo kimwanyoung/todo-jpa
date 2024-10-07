@@ -1,4 +1,4 @@
-package org.src.todojpa.entity;
+package org.src.todojpa.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package org.src.todojpa.dto;
+package org.src.todojpa.domain.dto;
 
 import lombok.Getter;
 

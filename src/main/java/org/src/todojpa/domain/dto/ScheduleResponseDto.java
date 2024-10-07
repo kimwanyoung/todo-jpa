@@ -1,7 +1,7 @@
-package org.src.todojpa.dto;
+package org.src.todojpa.domain.dto;
 
 import lombok.*;
-import org.src.todojpa.entity.Schedule;
+import org.src.todojpa.domain.entity.Schedule;
 
 import java.time.LocalDateTime;
 
