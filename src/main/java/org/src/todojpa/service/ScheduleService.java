@@ -60,6 +60,15 @@ public class ScheduleService {
         return ScheduleResponseDto.from(schedule);
     }
 
+
+    public ScheduleResponseDto deleteScheduleById(Long id) {
+        Schedule schedule = findSchedule(id);
+
+        this.scheduleRepository.delete(schedule);
+
+        return ScheduleResponseDto.from(schedule);
+    }
+
     private Schedule findSchedule(Long id) {
         return this.scheduleRepository
                 .findById(id)

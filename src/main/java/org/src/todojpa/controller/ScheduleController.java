@@ -41,9 +41,9 @@ public class ScheduleController {
     ) {
         return ResponseEntity.ok(this.scheduleService.updateScheduleById(id, req));
     }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<ScheduleResponseDto> deleteSchedule(@PathVariable Long id) {
-//        return ResponseEntity.ok(this.scheduleService.deleteScheduleById(id));
-//    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ScheduleResponseDto> deleteSchedule(@PathVariable Long id) {
+        return ResponseEntity.ok(this.scheduleService.deleteScheduleById(id));
+    }
 }
