@@ -21,17 +21,23 @@ public class ScheduleController {
 
     @GetMapping
     public ResponseEntity<PagedModel<ScheduleResponseDto>> retrieveSchedules(Pageable pageable) {
-        return ResponseEntity.ok(new PagedModel<>(this.scheduleService.retrieveSchedules(pageable)));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new PagedModel<>(this.scheduleService.retrieveSchedules(pageable)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> retrieveSchedule(@PathVariable Long id) {
-        return ResponseEntity.ok(this.scheduleService.retrieveScheduleById(id));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.scheduleService.retrieveScheduleById(id));
     }
 
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleCreateDto req) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.scheduleService.createSchedule(req));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(this.scheduleService.createSchedule(req));
     }
 
     @PatchMapping("/{id}")
@@ -39,11 +45,15 @@ public class ScheduleController {
             @PathVariable Long id,
             @RequestBody ScheduleUpdateDto req
     ) {
-        return ResponseEntity.ok(this.scheduleService.updateScheduleById(id, req));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.scheduleService.updateScheduleById(id, req));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> deleteSchedule(@PathVariable Long id) {
-        return ResponseEntity.ok(this.scheduleService.deleteScheduleById(id));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.scheduleService.deleteScheduleById(id));
     }
 }
