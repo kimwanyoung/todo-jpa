@@ -23,7 +23,7 @@ public class CommentService {
 
     public Page<CommentResponseDto> retrieveComments(Long scheduleId, Pageable pageable) {
         this.scheduleService.validateScheduleExists(scheduleId);
-        Page<Comment> comments = this.commentRepository.findAll(pageable);
+        Page<Comment> comments = this.commentRepository.findCommentsByScheduleId(scheduleId ,pageable);
 
         List<CommentResponseDto> commentResponseDtos = comments.getContent().stream()
                 .map(comment -> CommentResponseDto.builder()
