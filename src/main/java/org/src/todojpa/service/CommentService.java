@@ -40,7 +40,7 @@ public class CommentService {
 
     public CommentResponseDto retrieveCommentById(Long scheduleId, Long commentId) {
         this.scheduleService.validateScheduleExists(scheduleId);
-        Comment comment = findCommentById(commentId);
+        Comment comment = findCommentById(scheduleId, commentId);
 
         return CommentResponseDto.from(comment);
     }
@@ -58,8 +58,8 @@ public class CommentService {
         return CommentResponseDto.from(savedComment);
     }
 
-    private Comment findCommentById(Long commentId) {
-        return this.commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+    private Comment findCommentById(Long scheduleId, Long commentId) {
+        return this.commentRepository.findCommentByScheduleIdAndId(scheduleId, commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
     }
 }
 
