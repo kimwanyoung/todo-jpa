@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.src.todojpa.domain.dto.CommentCreateDto;
 
 @Entity
 @Getter
@@ -25,4 +26,11 @@ public class Comment extends Timestamp {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Schedule schedule;
+
+    public static Comment from(CommentCreateDto dto) {
+        return Comment.builder()
+                .contents(dto.getContents())
+                .username(dto.getUsername())
+                .build();
+    }
 }

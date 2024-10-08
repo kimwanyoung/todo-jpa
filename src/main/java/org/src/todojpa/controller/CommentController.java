@@ -6,6 +6,7 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.src.todojpa.domain.dto.CommentCreateDto;
 import org.src.todojpa.domain.dto.CommentResponseDto;
 import org.src.todojpa.service.CommentService;
 
@@ -29,5 +30,15 @@ public class CommentController {
             @PathVariable Long commentId
     ) {
         return ResponseEntity.ok(this.commentService.retrieveCommentById(scheduleId, commentId));
+    }
+
+    @PostMapping
+    public ResponseEntity<CommentResponseDto> createComment(
+            @PathVariable Long scheduleId,
+            @RequestBody CommentCreateDto req
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(this.commentService.createComment(scheduleId, req));
     }
 }

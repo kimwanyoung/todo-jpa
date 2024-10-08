@@ -1,12 +1,15 @@
 package org.src.todojpa.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.src.todojpa.domain.dto.CommentCreateDto;
 import org.src.todojpa.domain.dto.CommentResponseDto;
 import org.src.todojpa.domain.entity.Comment;
+import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.repository.CommentRepository;
 
 import java.util.List;
@@ -42,7 +45,23 @@ public class CommentService {
         return CommentResponseDto.from(comment);
     }
 
+    @Transactional
+    public CommentResponseDto createComment(Long scheduleId, CommentCreateDto req) {
+        Schedule schedule = this.scheduleService.findSchedule(scheduleId);
+        Comment comment = Comment.builder()
+                .contents(req.getContents())
+                .schedule(schedule)
+                .username(req.getUsername())
+                .build();
+
+        Comment savedComment = this.commentRepository.save(comment);
+        return CommentResponseDto.from(savedComment);
+    }
+
     private Comment findCommentById(Long commentId) {
         return this.commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
     }
 }
+
+
+
