@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.src.todojpa.domain.dto.UserCreateDto;
 import org.src.todojpa.domain.dto.UserResponseDto;
+import org.src.todojpa.domain.dto.UserUpdateDto;
+import org.src.todojpa.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> createUser(@RequestMapping UserCreateDto req) {
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserCreateDto req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.userService.createUser(req));
@@ -34,7 +37,7 @@ public class UserController {
     ) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.userService.updateUserById(req));
+                .body(this.userService.updateUserById(id, req));
     }
 
     @DeleteMapping("/{id}")
