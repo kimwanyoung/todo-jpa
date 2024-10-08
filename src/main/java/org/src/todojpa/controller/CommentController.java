@@ -58,4 +58,15 @@ public class CommentController {
                 .status(HttpStatus.OK)
                 .body(this.commentService.updateCommentById(commentId, req));
     }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<CommentResponseDto> deleteComment(
+            @PathVariable Long scheduleId,
+            @PathVariable Long commentId
+    ) {
+        this.scheduleService.validateScheduleExists(scheduleId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.commentService.deleteCommentById(commentId));
+    }
 }

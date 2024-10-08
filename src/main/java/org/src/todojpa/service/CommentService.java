@@ -70,6 +70,14 @@ public class CommentService {
     private Comment findCommentById(Long commentId) {
         return this.commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
     }
+
+    public CommentResponseDto deleteCommentById(Long commentId) {
+        Comment comment = findCommentById(commentId);
+
+        this.commentRepository.delete(comment);
+
+        return CommentResponseDto.from(comment);
+    }
 }
 
 
