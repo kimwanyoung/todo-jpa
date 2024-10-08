@@ -2,6 +2,7 @@ package org.src.todojpa.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,10 @@ public class CommentController {
     private final ScheduleService scheduleService;
 
     @GetMapping
-    public ResponseEntity<PagedModel<CommentResponseDto>> retrieveComments(@PathVariable Long scheduleId, Pageable pageable) {
+    public ResponseEntity<PagedModel<CommentResponseDto>> retrieveComments(
+            @PathVariable Long scheduleId,
+            @PageableDefault Pageable pageable
+    ) {
         this.scheduleService.validateScheduleExists(scheduleId);
         return ResponseEntity
                 .status(HttpStatus.OK)
