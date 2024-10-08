@@ -10,9 +10,13 @@
 - 생성
 - 조회
 - 삭제
-  - 작성자 이름이 같아야 수정 가능
 - 수정
-  - 작성자 이름이 같아야 수정 가능
+
+### LV.4 유저 CRUD
+- 생성
+- 조회
+- 삭제
+- 수정
 
 ## API 명세
 https://documenter.getpostman.com/view/24686570/2sAXxMhDxr
