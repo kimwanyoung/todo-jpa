@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.src.todojpa.domain.dto.CommentCreateDto;
 import org.src.todojpa.domain.dto.CommentUpdateDto;
 
 @Entity
@@ -28,7 +27,6 @@ public class Comment extends Timestamp {
     private String username;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Schedule schedule;
 
