@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.src.todojpa.domain.dto.CommentCreateDto;
 import org.src.todojpa.domain.dto.CommentResponseDto;
+import org.src.todojpa.domain.dto.CommentUpdateDto;
 import org.src.todojpa.domain.entity.Comment;
 import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.repository.CommentRepository;
@@ -19,10 +20,8 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final ScheduleService scheduleService;
 
     public Page<CommentResponseDto> retrieveComments(Long scheduleId, Pageable pageable) {
-        this.scheduleService.validateScheduleExists(scheduleId);
         Page<Comment> comments = this.commentRepository.findCommentsByScheduleId(scheduleId ,pageable);
 
         List<CommentResponseDto> commentResponseDtos = comments.getContent().stream()
@@ -38,16 +37,18 @@ public class CommentService {
         return new PageImpl<>(commentResponseDtos, pageable, comments.getTotalPages());
     }
 
-    public CommentResponseDto retrieveCommentById(Long scheduleId, Long commentId) {
-        this.scheduleService.validateScheduleExists(scheduleId);
-        Comment comment = findCommentById(scheduleId, commentId);
+    public CommentResponseDto retrieveCommentById(Long commentId) {
+        Comment comment = findCommentById(commentId);
 
         return CommentResponseDto.from(comment);
     }
 
     @Transactional
     public CommentResponseDto createComment(Long scheduleId, CommentCreateDto req) {
-        Schedule schedule = this.scheduleService.findSchedule(scheduleId);
+        Schedule schedule = Schedule.builder()
+                .id(scheduleId)
+                .build();
+
         Comment comment = Comment.builder()
                 .contents(req.getContents())
                 .schedule(schedule)
@@ -58,8 +59,16 @@ public class CommentService {
         return CommentResponseDto.from(savedComment);
     }
 
-    private Comment findCommentById(Long scheduleId, Long commentId) {
-        return this.commentRepository.findCommentByScheduleIdAndId(scheduleId, commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+    @Transactional
+    public CommentResponseDto updateCommentById(Long commentId, CommentUpdateDto req) {
+        Comment comment = findCommentById(commentId);
+        comment.update(req);
+
+        return CommentResponseDto.from(comment);
+    }
+
+    private Comment findCommentById(Long commentId) {
+        return this.commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
     }
 }
 

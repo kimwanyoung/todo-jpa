@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.src.todojpa.domain.dto.CommentCreateDto;
+import org.src.todojpa.domain.dto.CommentUpdateDto;
 
 @Entity
 @Getter
@@ -32,5 +33,9 @@ public class Comment extends Timestamp {
                 .contents(dto.getContents())
                 .username(dto.getUsername())
                 .build();
+    }
+
+    public void update(CommentUpdateDto dto) {
+        this.contents = dto.getContents();
     }
 }

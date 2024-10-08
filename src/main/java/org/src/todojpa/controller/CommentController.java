@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.src.todojpa.domain.dto.CommentCreateDto;
 import org.src.todojpa.domain.dto.CommentResponseDto;
+import org.src.todojpa.domain.dto.CommentUpdateDto;
 import org.src.todojpa.service.CommentService;
+import org.src.todojpa.service.ScheduleService;
 
 @RestController
 @RequestMapping("/schedules/{scheduleId}/comments")
@@ -16,9 +18,11 @@ import org.src.todojpa.service.CommentService;
 public class CommentController {
 
     private final CommentService commentService;
+    private final ScheduleService scheduleService;
 
     @GetMapping
     public ResponseEntity<PagedModel<CommentResponseDto>> retrieveComments(@PathVariable Long scheduleId, Pageable pageable) {
+        this.scheduleService.validateScheduleExists(scheduleId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new PagedModel<>(this.commentService.retrieveComments(scheduleId, pageable)));
@@ -29,7 +33,8 @@ public class CommentController {
             @PathVariable Long scheduleId,
             @PathVariable Long commentId
     ) {
-        return ResponseEntity.ok(this.commentService.retrieveCommentById(scheduleId, commentId));
+        this.scheduleService.validateScheduleExists(scheduleId);
+        return ResponseEntity.ok(this.commentService.retrieveCommentById(commentId));
     }
 
     @PostMapping
@@ -40,5 +45,17 @@ public class CommentController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(this.commentService.createComment(scheduleId, req));
+    }
+
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<CommentResponseDto> updateComment(
+            @PathVariable Long scheduleId,
+            @PathVariable Long commentId,
+            @RequestBody CommentUpdateDto req
+    ) {
+        this.scheduleService.validateScheduleExists(scheduleId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.commentService.updateCommentById(commentId, req));
     }
 }
