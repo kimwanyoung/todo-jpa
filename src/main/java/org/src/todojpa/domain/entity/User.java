@@ -25,7 +25,12 @@ public class User extends Timestamp {
     private String email;
 
     public void update(UserUpdateDto dto) {
-        this.email = dto.getEmail();
-        this.name = dto.getName();
+        if(dto.getName() != null) {
+            this.name = dto.getName();
+        }
+
+        if(dto.getEmail() != null) {
+            this.email = dto.getEmail();
+        }
     }
 }
