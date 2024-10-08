@@ -70,6 +70,12 @@ public class ScheduleService {
         return ScheduleResponseDto.from(schedule);
     }
 
+    public void validateScheduleExists(Long scheduleId) {
+        if (!scheduleRepository.existsById(scheduleId)) {
+            throw new IllegalArgumentException("존재하지 않는 일정입니다.");
+        }
+    }
+
     private Schedule findSchedule(Long id) {
         return this.scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일정입니다."));
     }
