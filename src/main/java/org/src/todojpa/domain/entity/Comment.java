@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.src.todojpa.domain.dto.CommentCreateDto;
 import org.src.todojpa.domain.dto.CommentUpdateDto;
 
@@ -26,14 +28,9 @@ public class Comment extends Timestamp {
     private String username;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Schedule schedule;
-
-    public static Comment from(CommentCreateDto dto) {
-        return Comment.builder()
-                .contents(dto.getContents())
-                .username(dto.getUsername())
-                .build();
-    }
 
     public void update(CommentUpdateDto dto) {
         this.contents = dto.getContents();
