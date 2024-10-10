@@ -17,11 +17,12 @@ public class ScheduleResponseDto {
     private UserResponseDto user;
 
     public static ScheduleResponseDto from(Schedule schedule) {
+        UserResponseDto user = UserResponseDto.from(schedule.getUser());
         return ScheduleResponseDto.builder()
                 .id(schedule.getId())
                 .title(schedule.getTitle())
                 .contents(schedule.getContents())
-                .user(UserResponseDto.from(schedule.getUser()))
+                .user(user)
                 .createdAt(schedule.getCreatedAt())
                 .modifiedAt(schedule.getModifiedAt())
                 .build();

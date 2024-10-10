@@ -6,11 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.src.todojpa.domain.dto.CommentCreateDto;
 import org.src.todojpa.domain.dto.CommentResponseDto;
-import org.src.todojpa.domain.dto.CommentUpdateDto;
 import org.src.todojpa.domain.entity.Comment;
 import org.src.todojpa.domain.entity.Schedule;
+import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.repository.CommentRepository;
 
 import java.util.List;
@@ -25,13 +24,7 @@ public class CommentService {
         Page<Comment> comments = this.commentRepository.findCommentsByScheduleId(scheduleId ,pageable);
 
         List<CommentResponseDto> commentResponseDtos = comments.getContent().stream()
-                .map(comment -> CommentResponseDto.builder()
-                        .id(comment.getId())
-                        .username(comment.getUsername())
-                        .contents(comment.getContents())
-                        .createdAt(comment.getCreatedAt())
-                        .modifiedAt(comment.getModifiedAt())
-                        .build())
+                .map(CommentResponseDto::from)
                 .toList();
 
         return new PageImpl<>(commentResponseDtos, pageable, comments.getTotalPages());
@@ -44,11 +37,11 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto createComment(CommentCreateDto req, Schedule schedule) {
+    public CommentResponseDto createComment(String contents, Schedule schedule, User user) {
         Comment comment = Comment.builder()
-                .contents(req.getContents())
+                .contents(contents)
                 .schedule(schedule)
-                .username(req.getUsername())
+                .user(user)
                 .build();
 
         Comment savedComment = this.commentRepository.save(comment);
@@ -56,10 +49,11 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateCommentById(Long commentId, CommentUpdateDto req) {
+    public CommentResponseDto updateCommentById(Long commentId, Long userId, String contents) {
         Comment comment = findCommentById(commentId);
 
-        comment.update(req);
+        comment.checkUserById(userId);
+        comment.update(contents);
 
         return CommentResponseDto.from(comment);
     }

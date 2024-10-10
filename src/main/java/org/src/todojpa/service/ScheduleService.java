@@ -24,17 +24,7 @@ public class ScheduleService {
         Page<Schedule> schedules = this.scheduleRepository.findAll(pageable);
 
         List<ScheduleResponseDto> scheduleResponseDtos = schedules.getContent().stream()
-                .map(schedule -> {
-                    UserResponseDto user = UserResponseDto.from(schedule.getUser());
-                    return ScheduleResponseDto.builder()
-                            .id(schedule.getId())
-                            .title(schedule.getTitle())
-                            .user(user)
-                            .contents(schedule.getContents())
-                            .createdAt(schedule.getCreatedAt())
-                            .modifiedAt(schedule.getModifiedAt())
-                            .build();
-                })
+                .map(ScheduleResponseDto::from)
                 .toList();
 
         return new PageImpl<>(scheduleResponseDtos, pageable, schedules.getTotalPages());

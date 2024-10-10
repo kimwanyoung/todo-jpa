@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.src.todojpa.domain.dto.CommentUpdateDto;
 
 @Entity
 @Getter
@@ -23,14 +22,21 @@ public class Comment extends Timestamp {
     @Column
     private String contents;
 
-    @Column
-    private String username;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Schedule schedule;
 
-    public void update(CommentUpdateDto dto) {
-        this.contents = dto.getContents();
+    public void update(String contents) {
+        this.contents = contents;
+    }
+
+    public void checkUserById(Long userId) {
+        if (!this.user.checkId(userId)) {
+            throw new IllegalStateException("권한이 없습니다");
+        }
     }
 }

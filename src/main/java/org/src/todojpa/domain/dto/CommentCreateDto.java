@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class CommentCreateDto {
-    private String username;
+    private Long userId;
     private String contents;
 }
