@@ -7,6 +7,8 @@ import org.src.todojpa.domain.dto.UserResponseDto;
 import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.repository.UserRepository;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -20,6 +22,10 @@ public class UserService {
     }
 
     public UserResponseDto createUser(String name, String email) {
+        this.userRepository.findByEmail(email).ifPresent((user) -> {
+            throw new IllegalStateException("이미 존재하는 이메일입니다.");
+        });
+
         User user = User.builder()
                 .name(name)
                 .email(email)
@@ -48,7 +54,8 @@ public class UserService {
     }
 
     public User findUserById(Long id) {
-        return this.userRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
+        return this.userRepository.findById(id).orElseThrow(() ->
+                new IllegalStateException("존재하지 않는 유저입니다.")
+        );
     }
 }
