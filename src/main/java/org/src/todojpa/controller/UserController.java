@@ -1,5 +1,6 @@
 package org.src.todojpa.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserCreateDto req) {
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid UserCreateDto req) {
         String name = req.getName();
         String email = req.getEmail();
 

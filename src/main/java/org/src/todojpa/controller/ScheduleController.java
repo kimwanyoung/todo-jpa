@@ -1,5 +1,6 @@
 package org.src.todojpa.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -39,7 +40,7 @@ public class ScheduleController {
     }
 
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleCreateDto req) {
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody @Valid ScheduleCreateDto req) {
         User user = this.userService.findUserById(req.getUserId());
         String contents = req.getContents();
         String title = req.getTitle();
@@ -52,7 +53,7 @@ public class ScheduleController {
     @PatchMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
-            @RequestBody ScheduleUpdateDto req
+            @RequestBody @Valid ScheduleUpdateDto req
     ) {
         Long userId = req.getUserId();
         String title = req.getTitle();
@@ -65,7 +66,7 @@ public class ScheduleController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> deleteSchedule(
             @PathVariable Long id,
-            @RequestBody ScheduleDeleteDto req
+            @RequestBody @Valid ScheduleDeleteDto req
             ) {
         Long userId = req.getUserId();
         return ResponseEntity
