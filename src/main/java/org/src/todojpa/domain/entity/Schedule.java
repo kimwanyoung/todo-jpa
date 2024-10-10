@@ -1,15 +1,11 @@
 package org.src.todojpa.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.src.todojpa.domain.dto.ScheduleCreateDto;
 import org.src.todojpa.domain.dto.ScheduleUpdateDto;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Entity
@@ -22,8 +18,6 @@ public class Schedule extends Timestamp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String username;
 
     @Column(nullable = false)
     private String title;
@@ -31,16 +25,19 @@ public class Schedule extends Timestamp {
     @Column(nullable = false)
     private String contents;
 
-    public static Schedule from(ScheduleCreateDto dto) {
-        return Schedule.builder()
-                .username(dto.getUsername())
-                .title(dto.getTitle())
-                .contents(dto.getContents())
-                .build();
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn
+    private User user;
 
     public void update(ScheduleUpdateDto dto) {
         this.title = dto.getTitle();
         this.contents = dto.getContents();
+    }
+
+    public void validateUserById(Long id){
+        if(!user.checkId(id)) {
+            throw new IllegalStateException("권한이 없습니다.");
+        }
     }
 }

@@ -9,8 +9,12 @@ import org.springframework.stereotype.Service;
 import org.src.todojpa.domain.dto.ScheduleCreateDto;
 import org.src.todojpa.domain.dto.ScheduleResponseDto;
 import org.src.todojpa.domain.dto.ScheduleUpdateDto;
+import org.src.todojpa.domain.dto.UserResponseDto;
 import org.src.todojpa.domain.entity.Schedule;
+import org.src.todojpa.domain.entity.User;
+import org.src.todojpa.dto.ScheduleDeleteDto;
 import org.src.todojpa.repository.ScheduleRepository;
+import org.src.todojpa.repository.UserRepository;
 
 import java.util.List;
 
@@ -19,6 +23,7 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
     public Page<ScheduleResponseDto> retrieveSchedules(Pageable pageable) {
         Page<Schedule> schedules = this.scheduleRepository.findAll(pageable);
@@ -27,8 +32,8 @@ public class ScheduleService {
                 .map(schedule -> ScheduleResponseDto.builder()
                         .id(schedule.getId())
                         .title(schedule.getTitle())
+                        .user(UserResponseDto.from(schedule.getUser()))
                         .contents(schedule.getContents())
-                        .username(schedule.getUsername())
                         .createdAt(schedule.getCreatedAt())
                         .modifiedAt(schedule.getModifiedAt())
                         .build())
@@ -44,7 +49,14 @@ public class ScheduleService {
     }
 
     public ScheduleResponseDto createSchedule(ScheduleCreateDto req) {
-        Schedule schedule = Schedule.from(req);
+        User user = this.userRepository.findById(req.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        Schedule schedule = Schedule.builder()
+                .title(req.getTitle())
+                .contents(req.getContents())
+                .user(user)
+                .build();
 
         Schedule savedSchedule = this.scheduleRepository.save(schedule);
 
@@ -55,14 +67,18 @@ public class ScheduleService {
     public ScheduleResponseDto updateScheduleById(Long id, ScheduleUpdateDto req) {
         Schedule schedule = findSchedule(id);
 
+        schedule.validateUserById(req.getUserId());
+
         schedule.update(req);
 
         return ScheduleResponseDto.from(schedule);
     }
 
 
-    public ScheduleResponseDto deleteScheduleById(Long id) {
+    public ScheduleResponseDto deleteScheduleById(Long id, ScheduleDeleteDto req) {
         Schedule schedule = findSchedule(id);
+
+        schedule.validateUserById(req.getUserId());
 
         this.scheduleRepository.delete(schedule);
 
@@ -76,6 +92,7 @@ public class ScheduleService {
     }
 
     public Schedule findSchedule(Long id) {
-        return this.scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일정입니다."));
+        return this.scheduleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일정입니다."));
     }
 }

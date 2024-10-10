@@ -10,18 +10,18 @@ import java.time.LocalDateTime;
 @Builder
 public class ScheduleResponseDto {
     private Long id;
-    private String username;
     private String title;
     private String contents;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private UserResponseDto user;
 
     public static ScheduleResponseDto from(Schedule schedule) {
         return ScheduleResponseDto.builder()
                 .id(schedule.getId())
                 .title(schedule.getTitle())
                 .contents(schedule.getContents())
-                .username(schedule.getUsername())
+                .user(UserResponseDto.from(schedule.getUser()))
                 .createdAt(schedule.getCreatedAt())
                 .modifiedAt(schedule.getModifiedAt())
                 .build();

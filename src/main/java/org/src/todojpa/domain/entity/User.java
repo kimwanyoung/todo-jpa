@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.src.todojpa.domain.dto.UserUpdateDto;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Table
@@ -32,5 +34,10 @@ public class User extends Timestamp {
         if(dto.getEmail() != null) {
             this.email = dto.getEmail();
         }
+    }
+
+
+    public boolean checkId(Long id) {
+        return Objects.equals(this.id, id);
     }
 }

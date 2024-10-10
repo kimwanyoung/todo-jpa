@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.src.todojpa.domain.dto.ScheduleCreateDto;
 import org.src.todojpa.domain.dto.ScheduleResponseDto;
 import org.src.todojpa.domain.dto.ScheduleUpdateDto;
+import org.src.todojpa.dto.ScheduleDeleteDto;
 import org.src.todojpa.service.ScheduleService;
 
 
@@ -52,9 +53,12 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> deleteSchedule(@PathVariable Long id) {
+    public ResponseEntity<ScheduleResponseDto> deleteSchedule(
+            @PathVariable Long id,
+            @RequestBody ScheduleDeleteDto req
+            ) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.scheduleService.deleteScheduleById(id));
+                .body(this.scheduleService.deleteScheduleById(id, req));
     }
 }
