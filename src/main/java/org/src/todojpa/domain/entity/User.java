@@ -23,7 +23,7 @@ public class User extends Timestamp {
     @Column
     private String name;
 
-    @Column
+    @Column(unique = true)
     private String email;
 
     public void update(String name, String email) {

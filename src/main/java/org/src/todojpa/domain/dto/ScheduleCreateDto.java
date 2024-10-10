@@ -1,6 +1,7 @@
 package org.src.todojpa.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
@@ -11,6 +12,6 @@ public class ScheduleCreateDto {
     @NotBlank(message = "본문은 필수 입니다.")
     private String contents;
 
-    @NotBlank(message = "userId는 필수 입니다.")
+    @NotNull(message = "userId는 필수 입니다.")
     private Long userId;
 }

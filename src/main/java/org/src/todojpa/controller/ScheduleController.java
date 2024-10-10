@@ -12,7 +12,7 @@ import org.src.todojpa.domain.dto.ScheduleCreateDto;
 import org.src.todojpa.domain.dto.ScheduleResponseDto;
 import org.src.todojpa.domain.dto.ScheduleUpdateDto;
 import org.src.todojpa.domain.entity.User;
-import org.src.todojpa.dto.ScheduleDeleteDto;
+import org.src.todojpa.domain.dto.ScheduleDeleteDto;
 import org.src.todojpa.service.ScheduleService;
 import org.src.todojpa.service.UserService;
 
