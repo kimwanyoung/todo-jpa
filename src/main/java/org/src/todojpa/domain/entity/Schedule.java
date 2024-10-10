@@ -30,9 +30,9 @@ public class Schedule extends Timestamp {
     @JoinColumn
     private User user;
 
-    public void update(ScheduleUpdateDto dto) {
-        this.title = dto.getTitle();
-        this.contents = dto.getContents();
+    public void update(String title, String contents) {
+        this.title = title;
+        this.contents = contents;
     }
 
     public void validateUserById(Long id){

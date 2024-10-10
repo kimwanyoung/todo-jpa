@@ -25,9 +25,12 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponseDto> createUser(@RequestBody UserCreateDto req) {
+        String name = req.getName();
+        String email = req.getEmail();
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.userService.createUser(req));
+                .body(this.userService.createUser(name, email));
     }
 
     @PatchMapping("/{id}")
@@ -35,9 +38,12 @@ public class UserController {
             @PathVariable Long id,
             @RequestBody UserUpdateDto req
     ) {
+        String name = req.getName();
+        String email = req.getEmail();
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.userService.updateUserById(id, req));
+                .body(this.userService.updateUserById(id, name, email));
     }
 
     @DeleteMapping("/{id}")

@@ -41,9 +41,12 @@ public class ScheduleController {
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleCreateDto req) {
         User user = this.userService.findUserById(req.getUserId());
+        String contents = req.getContents();
+        String title = req.getTitle();
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(this.scheduleService.createSchedule(req, user));
+                .body(this.scheduleService.createSchedule(title, contents, user));
     }
 
     @PatchMapping("/{id}")
@@ -51,9 +54,12 @@ public class ScheduleController {
             @PathVariable Long id,
             @RequestBody ScheduleUpdateDto req
     ) {
+        Long userId = req.getUserId();
+        String title = req.getTitle();
+        String contents = req.getContents();
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.scheduleService.updateScheduleById(id, req));
+                .body(this.scheduleService.updateScheduleById(id, userId, title, contents));
     }
 
     @DeleteMapping("/{id}")
@@ -61,8 +67,9 @@ public class ScheduleController {
             @PathVariable Long id,
             @RequestBody ScheduleDeleteDto req
             ) {
+        Long userId = req.getUserId();
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.scheduleService.deleteScheduleById(id, req));
+                .body(this.scheduleService.deleteScheduleById(id, userId));
     }
 }

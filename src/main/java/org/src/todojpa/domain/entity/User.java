@@ -26,16 +26,15 @@ public class User extends Timestamp {
     @Column
     private String email;
 
-    public void update(UserUpdateDto dto) {
-        if(dto.getName() != null) {
-            this.name = dto.getName();
+    public void update(String name, String email) {
+        if(name != null) {
+            this.name = name;
         }
 
-        if(dto.getEmail() != null) {
-            this.email = dto.getEmail();
+        if(email != null) {
+            this.email = email;
         }
     }
-
 
     public boolean checkId(Long id) {
         return Objects.equals(this.id, id);

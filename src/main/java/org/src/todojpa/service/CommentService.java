@@ -44,11 +44,7 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto createComment(Long scheduleId, CommentCreateDto req) {
-        Schedule schedule = Schedule.builder()
-                .id(scheduleId)
-                .build();
-
+    public CommentResponseDto createComment(CommentCreateDto req, Schedule schedule) {
         Comment comment = Comment.builder()
                 .contents(req.getContents())
                 .schedule(schedule)
@@ -62,13 +58,10 @@ public class CommentService {
     @Transactional
     public CommentResponseDto updateCommentById(Long commentId, CommentUpdateDto req) {
         Comment comment = findCommentById(commentId);
+
         comment.update(req);
 
         return CommentResponseDto.from(comment);
-    }
-
-    private Comment findCommentById(Long commentId) {
-        return this.commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
     }
 
     public CommentResponseDto deleteCommentById(Long commentId) {
@@ -77,6 +70,11 @@ public class CommentService {
         this.commentRepository.delete(comment);
 
         return CommentResponseDto.from(comment);
+    }
+
+    private Comment findCommentById(Long commentId) {
+        return this.commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
     }
 }
 

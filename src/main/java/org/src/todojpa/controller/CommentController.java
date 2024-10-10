@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.src.todojpa.domain.dto.CommentCreateDto;
 import org.src.todojpa.domain.dto.CommentResponseDto;
 import org.src.todojpa.domain.dto.CommentUpdateDto;
+import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.service.CommentService;
 import org.src.todojpa.service.ScheduleService;
 
@@ -46,9 +47,10 @@ public class CommentController {
             @PathVariable Long scheduleId,
             @RequestBody CommentCreateDto req
     ) {
+        Schedule schedule = this.scheduleService.findScheduleById(scheduleId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(this.commentService.createComment(scheduleId, req));
+                .body(this.commentService.createComment(req, schedule));
     }
 
     @PatchMapping("/{commentId}")

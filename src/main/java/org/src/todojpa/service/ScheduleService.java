@@ -6,15 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.src.todojpa.domain.dto.ScheduleCreateDto;
 import org.src.todojpa.domain.dto.ScheduleResponseDto;
-import org.src.todojpa.domain.dto.ScheduleUpdateDto;
 import org.src.todojpa.domain.dto.UserResponseDto;
 import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.domain.entity.User;
-import org.src.todojpa.dto.ScheduleDeleteDto;
 import org.src.todojpa.repository.ScheduleRepository;
-import org.src.todojpa.repository.UserRepository;
 
 import java.util.List;
 
@@ -28,29 +24,32 @@ public class ScheduleService {
         Page<Schedule> schedules = this.scheduleRepository.findAll(pageable);
 
         List<ScheduleResponseDto> scheduleResponseDtos = schedules.getContent().stream()
-                .map(schedule -> ScheduleResponseDto.builder()
-                        .id(schedule.getId())
-                        .title(schedule.getTitle())
-                        .user(UserResponseDto.from(schedule.getUser()))
-                        .contents(schedule.getContents())
-                        .createdAt(schedule.getCreatedAt())
-                        .modifiedAt(schedule.getModifiedAt())
-                        .build())
+                .map(schedule -> {
+                    UserResponseDto user = UserResponseDto.from(schedule.getUser());
+                    return ScheduleResponseDto.builder()
+                            .id(schedule.getId())
+                            .title(schedule.getTitle())
+                            .user(user)
+                            .contents(schedule.getContents())
+                            .createdAt(schedule.getCreatedAt())
+                            .modifiedAt(schedule.getModifiedAt())
+                            .build();
+                })
                 .toList();
 
         return new PageImpl<>(scheduleResponseDtos, pageable, schedules.getTotalPages());
     }
 
     public ScheduleResponseDto retrieveScheduleById(Long id) {
-        Schedule schedule = findSchedule(id);
+        Schedule schedule = findScheduleById(id);
 
         return ScheduleResponseDto.from(schedule);
     }
 
-    public ScheduleResponseDto createSchedule(ScheduleCreateDto req, User user) {
+    public ScheduleResponseDto createSchedule(String title, String contents, User user) {
         Schedule schedule = Schedule.builder()
-                .title(req.getTitle())
-                .contents(req.getContents())
+                .title(title)
+                .contents(contents)
                 .user(user)
                 .build();
 
@@ -60,21 +59,21 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ScheduleResponseDto updateScheduleById(Long id, ScheduleUpdateDto req) {
-        Schedule schedule = findSchedule(id);
+    public ScheduleResponseDto updateScheduleById(Long id, Long userId, String title, String contents) {
+        Schedule schedule = findScheduleById(id);
 
-        schedule.validateUserById(req.getUserId());
+        schedule.validateUserById(userId);
 
-        schedule.update(req);
+        schedule.update(title, contents);
 
         return ScheduleResponseDto.from(schedule);
     }
 
 
-    public ScheduleResponseDto deleteScheduleById(Long id, ScheduleDeleteDto req) {
-        Schedule schedule = findSchedule(id);
+    public ScheduleResponseDto deleteScheduleById(Long id, Long userId) {
+        Schedule schedule = findScheduleById(id);
 
-        schedule.validateUserById(req.getUserId());
+        schedule.validateUserById(userId);
 
         this.scheduleRepository.delete(schedule);
 
@@ -87,7 +86,7 @@ public class ScheduleService {
         }
     }
 
-    public Schedule findSchedule(Long id) {
+    public Schedule findScheduleById(Long id) {
         return this.scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일정입니다."));
     }

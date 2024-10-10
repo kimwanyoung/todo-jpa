@@ -3,9 +3,7 @@ package org.src.todojpa.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.src.todojpa.domain.dto.UserCreateDto;
 import org.src.todojpa.domain.dto.UserResponseDto;
-import org.src.todojpa.domain.dto.UserUpdateDto;
 import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.repository.UserRepository;
 
@@ -21,10 +19,10 @@ public class UserService {
         return UserResponseDto.from(user);
     }
 
-    public UserResponseDto createUser(UserCreateDto req) {
+    public UserResponseDto createUser(String name, String email) {
         User user = User.builder()
-                .name(req.getName())
-                .email(req.getEmail())
+                .name(name)
+                .email(email)
                 .build();
 
         User createdUser = this.userRepository.save(user);
@@ -33,10 +31,10 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto updateUserById(Long id, UserUpdateDto req) {
+    public UserResponseDto updateUserById(Long id, String name, String email) {
         User user = findUserById(id);
 
-        user.update(req);
+        user.update(name, email);
 
         return UserResponseDto.from(user);
     }
