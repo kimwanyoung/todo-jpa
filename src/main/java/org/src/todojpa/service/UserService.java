@@ -49,7 +49,7 @@ public class UserService {
         return UserResponseDto.from(user);
     }
 
-    private User findUserById(Long id) {
+    public User findUserById(Long id) {
         return this.userRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
     }

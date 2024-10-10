@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import org.src.todojpa.domain.dto.ScheduleCreateDto;
 import org.src.todojpa.domain.dto.ScheduleResponseDto;
 import org.src.todojpa.domain.dto.ScheduleUpdateDto;
+import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.dto.ScheduleDeleteDto;
 import org.src.todojpa.service.ScheduleService;
+import org.src.todojpa.service.UserService;
 
 
 @RestController
@@ -20,6 +22,7 @@ import org.src.todojpa.service.ScheduleService;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<PagedModel<ScheduleResponseDto>> retrieveSchedules(@PageableDefault Pageable pageable) {
@@ -37,9 +40,10 @@ public class ScheduleController {
 
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleCreateDto req) {
+        User user = this.userService.findUserById(req.getUserId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(this.scheduleService.createSchedule(req));
+                .body(this.scheduleService.createSchedule(req, user));
     }
 
     @PatchMapping("/{id}")

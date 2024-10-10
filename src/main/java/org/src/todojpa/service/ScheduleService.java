@@ -23,7 +23,6 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final UserRepository userRepository;
 
     public Page<ScheduleResponseDto> retrieveSchedules(Pageable pageable) {
         Page<Schedule> schedules = this.scheduleRepository.findAll(pageable);
@@ -48,10 +47,7 @@ public class ScheduleService {
         return ScheduleResponseDto.from(schedule);
     }
 
-    public ScheduleResponseDto createSchedule(ScheduleCreateDto req) {
-        User user = this.userRepository.findById(req.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-
+    public ScheduleResponseDto createSchedule(ScheduleCreateDto req, User user) {
         Schedule schedule = Schedule.builder()
                 .title(req.getTitle())
                 .contents(req.getContents())
