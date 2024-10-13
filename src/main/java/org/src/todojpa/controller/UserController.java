@@ -25,13 +25,14 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid UserCreateDto req) {
+    public ResponseEntity<UserResponseDto> signup(@RequestBody @Valid UserCreateDto req) {
         String name = req.getName();
         String email = req.getEmail();
+        String password = req.getPassword();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.userService.createUser(name, email));
+                .body(this.userService.signup(name, email, password));
     }
 
     @PatchMapping("/{id}")

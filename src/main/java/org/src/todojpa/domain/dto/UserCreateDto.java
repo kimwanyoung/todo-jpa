@@ -15,4 +15,7 @@ public class UserCreateDto {
     @NotBlank(message = "이메일은 필수입니다.")
     @Pattern(regexp = EMAIL_REGEXP, message = "이메일 형식에 맞지 않습니다.")
     private String email;
+
+    @NotBlank(message = "비밀번호는 필수입니다.")
+    private String password;
 }

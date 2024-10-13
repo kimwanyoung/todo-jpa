@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.src.todojpa.config.PasswordEncoder;
 import org.src.todojpa.domain.dto.UserUpdateDto;
 
 import java.util.Objects;
@@ -16,15 +18,19 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends Timestamp {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
     @Column(unique = true)
     private String email;
+
+    @Column(nullable = false)
+    private String password;
 
     public void update(String name, String email) {
         if(name != null) {
