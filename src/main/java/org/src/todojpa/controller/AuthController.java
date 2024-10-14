@@ -1,5 +1,6 @@
 package org.src.todojpa.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,24 +22,30 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDto> register(@RequestBody @Valid RegisterDto req) {
+    public ResponseEntity<AuthResponseDto> register(
+            @RequestBody @Valid RegisterDto req,
+            HttpServletResponse response
+    ) {
         String username = req.getName();
         String email = req.getEmail();
         String password = req.getPassword();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.authService.signup(username, email, password));
+                .body(this.authService.signup(username, email, password, response));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody @Valid LoginDto req) {
+    public ResponseEntity<AuthResponseDto> login(
+            @RequestBody @Valid LoginDto req,
+            HttpServletResponse response
+    ) {
         String email = req.getEmail();
         String password = req.getPassword();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.authService.login(email, password));
+                .body(this.authService.login(email, password, response));
     }
 
 }
