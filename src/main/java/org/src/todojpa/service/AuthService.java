@@ -34,4 +34,17 @@ public class AuthService {
         String token = this.jwtUtil.createToken(name);
         return AuthResponseDto.from(token);
     }
+
+    public AuthResponseDto login(String email, String password){
+        User user = this.userRepository.findByEmail(email).orElseThrow(() ->
+                new IllegalArgumentException("등록된 사용자가 없습니다.")
+        );
+
+        if(!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        String token = this.jwtUtil.createToken(user.getName());
+        return AuthResponseDto.from(token);
+    }
 }
