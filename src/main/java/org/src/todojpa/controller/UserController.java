@@ -12,7 +12,7 @@ import org.src.todojpa.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -22,17 +22,6 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.userService.retrieveUserById(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<UserResponseDto> signup(@RequestBody @Valid UserCreateDto req) {
-        String name = req.getName();
-        String email = req.getEmail();
-        String password = req.getPassword();
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(this.userService.signup(name, email, password));
     }
 
     @PatchMapping("/{id}")
