@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class RegisterDto {
+public class RegisterRequestDto {
 
     @NotBlank(message = "이름은 필수입니다.")
     private String name;

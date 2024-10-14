@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.src.todojpa.domain.dto.auth.RegisterDto;
+import org.src.todojpa.domain.dto.auth.AuthResponseDto;
+import org.src.todojpa.domain.dto.auth.RegisterRequestDto;
 import org.src.todojpa.service.AuthService;
 
 @RestController
@@ -18,11 +19,10 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto req) {
-        String token = this.authService.signup(req.getName(), req.getEmail(), req.getPassword());
+    public ResponseEntity<AuthResponseDto> register(@RequestBody RegisterRequestDto req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(token);
+                .body(this.authService.signup(req.getName(), req.getEmail(), req.getPassword()));
     }
 
 }

@@ -3,6 +3,7 @@ package org.src.todojpa.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.src.todojpa.config.PasswordEncoder;
+import org.src.todojpa.domain.dto.auth.AuthResponseDto;
 import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.jwt.JwtUtil;
 import org.src.todojpa.repository.UserRepository;
@@ -15,7 +16,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public String signup(String name, String email, String password) {
+    public AuthResponseDto signup(String name, String email, String password) {
         String encodedPassword = passwordEncoder.encode(password);
 
         this.userRepository.findByEmail(email).ifPresent((user) -> {
@@ -30,6 +31,7 @@ public class AuthService {
 
         this.userRepository.save(user);
 
-        return this.jwtUtil.createToken(name);
+        String token = this.jwtUtil.createToken(name);
+        return AuthResponseDto.from(token);
     }
 }
