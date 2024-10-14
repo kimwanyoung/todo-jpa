@@ -1,6 +1,8 @@
 package org.src.todojpa.domain.dto.schedule;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.src.todojpa.domain.dto.user.UserResponseDto;
 import org.src.todojpa.domain.entity.Schedule;
 
