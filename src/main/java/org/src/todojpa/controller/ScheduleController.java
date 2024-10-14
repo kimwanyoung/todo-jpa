@@ -8,11 +8,11 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.src.todojpa.domain.dto.ScheduleCreateDto;
-import org.src.todojpa.domain.dto.ScheduleResponseDto;
-import org.src.todojpa.domain.dto.ScheduleUpdateDto;
+import org.src.todojpa.domain.dto.schedule.ScheduleCreateDto;
+import org.src.todojpa.domain.dto.schedule.ScheduleResponseDto;
+import org.src.todojpa.domain.dto.schedule.ScheduleUpdateDto;
 import org.src.todojpa.domain.entity.User;
-import org.src.todojpa.domain.dto.ScheduleDeleteDto;
+import org.src.todojpa.domain.dto.schedule.ScheduleDeleteDto;
 import org.src.todojpa.service.ScheduleService;
 import org.src.todojpa.service.UserService;
 

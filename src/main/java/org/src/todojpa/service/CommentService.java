@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.src.todojpa.domain.dto.CommentResponseDto;
+import org.src.todojpa.domain.dto.comment.CommentResponseDto;
 import org.src.todojpa.domain.entity.Comment;
 import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.domain.entity.User;

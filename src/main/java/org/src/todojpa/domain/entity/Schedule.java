@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.src.todojpa.domain.dto.ScheduleCreateDto;
-import org.src.todojpa.domain.dto.ScheduleUpdateDto;
 
 @Getter
 @Entity

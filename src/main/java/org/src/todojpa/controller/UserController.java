@@ -1,13 +1,11 @@
 package org.src.todojpa.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.src.todojpa.domain.dto.UserCreateDto;
-import org.src.todojpa.domain.dto.UserResponseDto;
-import org.src.todojpa.domain.dto.UserUpdateDto;
+import org.src.todojpa.domain.dto.user.UserResponseDto;
+import org.src.todojpa.domain.dto.user.UserUpdateDto;
 import org.src.todojpa.service.UserService;
 
 @RestController

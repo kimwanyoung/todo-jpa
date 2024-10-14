@@ -1,8 +1,9 @@
-package org.src.todojpa.domain.dto;
+package org.src.todojpa.domain.dto.comment;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.src.todojpa.domain.dto.user.UserResponseDto;
 import org.src.todojpa.domain.entity.Comment;
 
 import java.time.LocalDateTime;

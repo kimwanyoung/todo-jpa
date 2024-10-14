@@ -1,4 +1,4 @@
-package org.src.todojpa.domain.dto;
+package org.src.todojpa.domain.dto.user;
 
 
 import jakarta.validation.constraints.NotBlank;

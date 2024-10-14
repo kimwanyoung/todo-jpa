@@ -1,4 +1,4 @@
-package org.src.todojpa.domain.dto;
+package org.src.todojpa.domain.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

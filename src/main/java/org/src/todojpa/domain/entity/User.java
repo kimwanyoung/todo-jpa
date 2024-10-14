@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.src.todojpa.config.PasswordEncoder;
-import org.src.todojpa.domain.dto.UserUpdateDto;
 
 import java.util.Objects;
 

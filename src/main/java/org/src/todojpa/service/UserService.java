@@ -1,11 +1,9 @@
 package org.src.todojpa.service;
 
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.src.todojpa.config.PasswordEncoder;
-import org.src.todojpa.domain.dto.UserResponseDto;
+import org.src.todojpa.domain.dto.user.UserResponseDto;
 import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.repository.UserRepository;
 

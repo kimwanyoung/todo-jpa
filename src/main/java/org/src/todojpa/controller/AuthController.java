@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.src.todojpa.domain.dto.RegisterDto;
+import org.src.todojpa.domain.dto.auth.RegisterDto;
 import org.src.todojpa.service.AuthService;
 
 @RestController
