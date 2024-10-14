@@ -11,7 +11,4 @@ public class ScheduleCreateDto {
 
     @NotBlank(message = "본문은 필수 입니다.")
     private String contents;
-
-    @NotNull(message = "userId는 필수 입니다.")
-    private Long userId;
 }

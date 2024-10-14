@@ -33,7 +33,7 @@ public class Schedule extends Timestamp {
         this.contents = contents;
     }
 
-    public void validateUserById(Long id){
+    public void validateWriterByUserId(Long id){
         if(!user.checkId(id)) {
             throw new IllegalStateException("권한이 없습니다.");
         }

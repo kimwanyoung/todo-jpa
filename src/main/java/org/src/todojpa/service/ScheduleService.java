@@ -18,6 +18,7 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final UserService userService;
 
     public Page<ScheduleResponseDto> retrieveSchedules(Pageable pageable) {
         Page<Schedule> schedules = this.scheduleRepository.findAll(pageable);
@@ -29,13 +30,14 @@ public class ScheduleService {
         return new PageImpl<>(scheduleResponseDtos, pageable, schedules.getTotalPages());
     }
 
-    public ScheduleResponseDto retrieveScheduleById(Long id) {
-        Schedule schedule = findScheduleById(id);
+    public ScheduleResponseDto retrieveScheduleById(Long scheduleId) {
+        Schedule schedule = findScheduleById(scheduleId);
 
         return ScheduleResponseDto.from(schedule);
     }
 
-    public ScheduleResponseDto createSchedule(String title, String contents, User user) {
+    public ScheduleResponseDto createSchedule(String title, String contents, Long userId) {
+        User user = this.userService.findUserById(userId);
         Schedule schedule = Schedule.builder()
                 .title(title)
                 .contents(contents)
@@ -48,10 +50,10 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ScheduleResponseDto updateScheduleById(Long id, Long userId, String title, String contents) {
-        Schedule schedule = findScheduleById(id);
+    public ScheduleResponseDto updateScheduleById(Long scheduleId, Long userId, String title, String contents) {
+        Schedule schedule = findScheduleById(scheduleId);
 
-        schedule.validateUserById(userId);
+        schedule.validateWriterByUserId(userId);
 
         schedule.update(title, contents);
 
@@ -59,10 +61,10 @@ public class ScheduleService {
     }
 
 
-    public ScheduleResponseDto deleteScheduleById(Long id, Long userId) {
-        Schedule schedule = findScheduleById(id);
+    public ScheduleResponseDto deleteScheduleById(Long scheduleId, Long userId) {
+        Schedule schedule = findScheduleById(scheduleId);
 
-        schedule.validateUserById(userId);
+        schedule.validateWriterByUserId(userId);
 
         this.scheduleRepository.delete(schedule);
 

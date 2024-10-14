@@ -11,11 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.src.todojpa.domain.dto.schedule.ScheduleCreateDto;
 import org.src.todojpa.domain.dto.schedule.ScheduleResponseDto;
 import org.src.todojpa.domain.dto.schedule.ScheduleUpdateDto;
-import org.src.todojpa.domain.entity.User;
-import org.src.todojpa.domain.dto.schedule.ScheduleDeleteDto;
 import org.src.todojpa.service.ScheduleService;
-import org.src.todojpa.service.UserService;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +19,6 @@ import org.src.todojpa.service.UserService;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
-    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<PagedModel<ScheduleResponseDto>> retrieveSchedules(@PageableDefault Pageable pageable) {
@@ -40,22 +35,24 @@ public class ScheduleController {
     }
 
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody @Valid ScheduleCreateDto req) {
-        User user = this.userService.findUserById(req.getUserId());
+    public ResponseEntity<ScheduleResponseDto> createSchedule(
+            @RequestAttribute("userId") Long userId,
+            @RequestBody @Valid ScheduleCreateDto req
+    ) {
         String contents = req.getContents();
         String title = req.getTitle();
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(this.scheduleService.createSchedule(title, contents, user));
+                .body(this.scheduleService.createSchedule(title, contents, userId));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
+            @RequestAttribute("userId") Long userId,
             @PathVariable Long id,
-            @RequestBody @Valid ScheduleUpdateDto req
+            @RequestBody ScheduleUpdateDto req
     ) {
-        Long userId = req.getUserId();
         String title = req.getTitle();
         String contents = req.getContents();
         return ResponseEntity
@@ -65,10 +62,9 @@ public class ScheduleController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> deleteSchedule(
-            @PathVariable Long id,
-            @RequestBody @Valid ScheduleDeleteDto req
-            ) {
-        Long userId = req.getUserId();
+            @RequestAttribute("userId") Long userId,
+            @PathVariable Long id
+    ) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.scheduleService.deleteScheduleById(id, userId));

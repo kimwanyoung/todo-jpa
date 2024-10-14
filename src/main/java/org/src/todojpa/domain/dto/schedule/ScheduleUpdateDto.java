@@ -7,9 +7,6 @@ import lombok.Getter;
 
 @Getter
 public class ScheduleUpdateDto {
-    @NotNull(message = "userId는 필수 입니다.")
-    private Long userId;
-
     private String title;
 
     private String contents;
