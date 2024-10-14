@@ -19,8 +19,11 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final UserService userService;
+    private final ScheduleService scheduleService;
 
     public Page<CommentResponseDto> retrieveComments(Long scheduleId, Pageable pageable) {
+        this.scheduleService.validateScheduleExists(scheduleId);
         Page<Comment> comments = this.commentRepository.findCommentsByScheduleId(scheduleId ,pageable);
 
         List<CommentResponseDto> commentResponseDtos = comments.getContent().stream()
@@ -30,14 +33,20 @@ public class CommentService {
         return new PageImpl<>(commentResponseDtos, pageable, comments.getTotalPages());
     }
 
-    public CommentResponseDto retrieveCommentById(Long commentId) {
+    public CommentResponseDto retrieveCommentById(Long commentId, Long scheduleId) {
+        this.scheduleService.validateScheduleExists(scheduleId);
         Comment comment = findCommentById(commentId);
 
         return CommentResponseDto.from(comment);
     }
 
     @Transactional
-    public CommentResponseDto createComment(String contents, Schedule schedule, User user) {
+    public CommentResponseDto createComment(String contents , Long scheduleId, Long userId) {
+        this.scheduleService.validateScheduleExists(scheduleId);
+
+        Schedule schedule = this.scheduleService.findScheduleById(scheduleId);
+        User user = this.userService.findUserById(userId);
+
         Comment comment = Comment.builder()
                 .contents(contents)
                 .schedule(schedule)
@@ -49,7 +58,8 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateCommentById(Long commentId, Long userId, String contents) {
+    public CommentResponseDto updateCommentById(Long commentId, Long scheduleId, Long userId, String contents) {
+        this.scheduleService.validateScheduleExists(scheduleId);
         Comment comment = findCommentById(commentId);
 
         comment.checkUserById(userId);
@@ -58,7 +68,8 @@ public class CommentService {
         return CommentResponseDto.from(comment);
     }
 
-    public CommentResponseDto deleteCommentById(Long commentId) {
+    public CommentResponseDto deleteCommentById(Long commentId, Long scheduleId) {
+        this.scheduleService.validateScheduleExists(scheduleId);
         Comment comment = findCommentById(commentId);
 
         this.commentRepository.delete(comment);

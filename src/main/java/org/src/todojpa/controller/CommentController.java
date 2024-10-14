@@ -10,11 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.src.todojpa.domain.dto.comment.CommentCreateDto;
 import org.src.todojpa.domain.dto.comment.CommentResponseDto;
 import org.src.todojpa.domain.dto.comment.CommentUpdateDto;
-import org.src.todojpa.domain.entity.Schedule;
-import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.service.CommentService;
-import org.src.todojpa.service.ScheduleService;
-import org.src.todojpa.service.UserService;
 
 @RestController
 @RequestMapping("/schedules/{scheduleId}/comments")
@@ -22,16 +18,12 @@ import org.src.todojpa.service.UserService;
 public class CommentController {
 
     private final CommentService commentService;
-    private final ScheduleService scheduleService;
-    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<PagedModel<CommentResponseDto>> retrieveComments(
             @PathVariable Long scheduleId,
             @PageableDefault Pageable pageable
     ) {
-        this.scheduleService.validateScheduleExists(scheduleId);
-
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new PagedModel<>(this.commentService.retrieveComments(scheduleId, pageable)));
@@ -42,43 +34,36 @@ public class CommentController {
             @PathVariable Long scheduleId,
             @PathVariable Long commentId
     ) {
-        this.scheduleService.validateScheduleExists(scheduleId);
-
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.commentService.retrieveCommentById(commentId));
+                .body(this.commentService.retrieveCommentById(commentId, scheduleId));
     }
 
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(
+            @RequestAttribute("userId") Long userId,
             @PathVariable Long scheduleId,
             @RequestBody CommentCreateDto req
     ) {
-
         String contents = req.getContents();
-        Long userId = req.getUserId();
-        User user = this.userService.findUserById(userId);
-        Schedule schedule = this.scheduleService.findScheduleById(scheduleId);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(this.commentService.createComment(contents, schedule, user));
+                .body(this.commentService.createComment(contents, scheduleId, userId));
     }
 
     @PatchMapping("/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(
+            @RequestAttribute("userId") Long userId,
             @PathVariable Long scheduleId,
             @PathVariable Long commentId,
             @RequestBody CommentUpdateDto req
     ) {
         String contents = req.getContents();
-        Long userId = req.getUserId();
-
-        this.scheduleService.validateScheduleExists(scheduleId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.commentService.updateCommentById(commentId, userId, contents));
+                .body(this.commentService.updateCommentById(commentId, scheduleId, userId, contents));
     }
 
     @DeleteMapping("/{commentId}")
@@ -86,10 +71,8 @@ public class CommentController {
             @PathVariable Long scheduleId,
             @PathVariable Long commentId
     ) {
-        this.scheduleService.validateScheduleExists(scheduleId);
-
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.commentService.deleteCommentById(commentId));
+                .body(this.commentService.deleteCommentById(commentId, scheduleId));
     }
 }
