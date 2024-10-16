@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
+import org.src.todojpa.domain.UserRole;
+import org.src.todojpa.domain.dto.user.VerifiedUserDto;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -29,6 +31,7 @@ public class JwtUtil {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";
+    public static final String AUTHORITY = "Authority";
     private final long TOKEN_TIME = 60 * 60 * 1000L;
 
     @Value("${jwt.secret.key}")
@@ -57,13 +60,14 @@ public class JwtUtil {
     }
 
 
-    public Long extractUserIdFromToken(String token) {
+    public VerifiedUserDto extractVerifiedUserFromToken(String token) {
         if (!StringUtils.hasText(token)) throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
 
         Claims userInfo = getUserInfoFromToken(token);
         Long userId = Long.parseLong(userInfo.getSubject());
+        UserRole role = UserRole.from(userInfo.get(AUTHORITY, String.class));
 
-        return userId;
+        return new VerifiedUserDto(userId, role);
     }
 
     public void validateToken(String token) {
@@ -84,12 +88,13 @@ public class JwtUtil {
         }
     }
 
-    public String createToken(Long userId) {
+    public String createToken(Long userId, UserRole role) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(userId+"")
+                        .claim(AUTHORITY, role)
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                         .setIssuedAt(date)
                         .signWith(key, SIGNATURE_ALGORITHM)

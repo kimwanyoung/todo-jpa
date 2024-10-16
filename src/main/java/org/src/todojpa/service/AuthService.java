@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.src.todojpa.domain.UserRole;
 import org.src.todojpa.security.PasswordEncoder;
 import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.jwt.JwtUtil;
@@ -31,13 +32,13 @@ public class AuthService {
                 .build();
 
         User savedUser = this.userRepository.save(user);
-        return this.jwtUtil.createToken(savedUser.getId());
+        return this.jwtUtil.createToken(savedUser.getId(), UserRole.USER);
     }
 
     public String login(String email, String password){
         User user = authenticateUser(email, password);
 
-        return this.jwtUtil.createToken(user.getId());
+        return this.jwtUtil.createToken(user.getId(), UserRole.USER);
     }
 
     private void validateDuplicateEmail(String email) {

@@ -2,6 +2,7 @@ package org.src.todojpa.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -9,12 +10,14 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.src.todojpa.domain.UserRole;
 import org.src.todojpa.domain.dto.schedule.ScheduleCreateDto;
 import org.src.todojpa.domain.dto.schedule.ScheduleResponseDto;
 import org.src.todojpa.domain.dto.schedule.ScheduleUpdateDto;
 import org.src.todojpa.domain.dto.user.VerifiedUserDto;
 import org.src.todojpa.service.ScheduleService;
 
+@Slf4j(topic = "schedule controller")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/schedules")
@@ -65,8 +68,9 @@ public class ScheduleController {
         String title = req.getTitle();
         String contents = req.getContents();
         Long userId = verifiedUserDto.getUserId();
+        UserRole role = verifiedUserDto.getRole();
 
-        ScheduleResponseDto scheduleResponseDto = this.scheduleService.updateScheduleById(id, userId, title, contents);
+        ScheduleResponseDto scheduleResponseDto = this.scheduleService.updateScheduleById(id, userId, role, title, contents);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -79,8 +83,9 @@ public class ScheduleController {
             VerifiedUserDto verifiedUserDto
     ) {
         Long userId = verifiedUserDto.getUserId();
+        UserRole role = verifiedUserDto.getRole();
 
-        ScheduleResponseDto scheduleResponseDto = this.scheduleService.deleteScheduleById(id, userId);
+        ScheduleResponseDto scheduleResponseDto = this.scheduleService.deleteScheduleById(id, userId, role);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

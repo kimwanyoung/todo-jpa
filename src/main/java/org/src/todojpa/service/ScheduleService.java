@@ -5,7 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.src.todojpa.domain.UserRole;
 import org.src.todojpa.domain.dto.schedule.ScheduleResponseDto;
 import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.domain.entity.User;
@@ -50,25 +53,29 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ScheduleResponseDto updateScheduleById(Long scheduleId, Long userId, String title, String contents) {
+    public ScheduleResponseDto updateScheduleById(Long scheduleId, Long userId, UserRole role, String title, String contents) {
         Schedule schedule = findScheduleById(scheduleId);
 
-        schedule.validateWriterByUserId(userId);
+        if(schedule.validateWriterByUserId(userId) || role.isAdmin()) {
+            schedule.update(title, contents);
 
-        schedule.update(title, contents);
+            return ScheduleResponseDto.from(schedule);
+        }
 
-        return ScheduleResponseDto.from(schedule);
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "권한이 없습니다.");
     }
 
 
-    public ScheduleResponseDto deleteScheduleById(Long scheduleId, Long userId) {
+    public ScheduleResponseDto deleteScheduleById(Long scheduleId, Long userId, UserRole role) {
         Schedule schedule = findScheduleById(scheduleId);
 
-        schedule.validateWriterByUserId(userId);
+        if (schedule.validateWriterByUserId(userId)  || role.isAdmin()) {
+            this.scheduleRepository.delete(schedule);
 
-        this.scheduleRepository.delete(schedule);
+            return ScheduleResponseDto.from(schedule);
+        }
 
-        return ScheduleResponseDto.from(schedule);
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "권한이 없습니다.");
     }
 
     public void validateScheduleExists(Long scheduleId) {

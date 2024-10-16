@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.src.todojpa.domain.UserRole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,17 +42,7 @@ public class Schedule extends Timestamp {
         this.contents = contents;
     }
 
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
-    }
-
-    public void validateWriterByUserId(Long id){
-        if(!user.checkId(id)) {
-            throw new IllegalStateException("권한이 없습니다.");
-        }
-    }
-
-    public void deleteComment(Comment comment) {
-        this.comments.remove(comment);
+    public boolean validateWriterByUserId(Long id){
+        return user.checkId(id);
     }
 }

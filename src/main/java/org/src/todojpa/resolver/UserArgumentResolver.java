@@ -34,8 +34,8 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         String token = jwtUtil.extractTokenFromRequest(request);
         this.jwtUtil.validateToken(token);
 
-        Long userId = this.jwtUtil.extractUserIdFromToken(token);
+        VerifiedUserDto verifiedUser = this.jwtUtil.extractVerifiedUserFromToken(token);
 
-        return new VerifiedUserDto(userId);
+        return verifiedUser;
     }
 }

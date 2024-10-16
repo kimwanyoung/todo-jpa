@@ -1,5 +1,6 @@
 package org.src.todojpa.controller;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class AuthController {
 
         String token = this.authService.signup(username, email, password);
 
+//        response.addCookie(new Cookie("Authorization", token));
         this.jwtUtil.addJwtToCookie(token, response);
 
         return ResponseEntity
