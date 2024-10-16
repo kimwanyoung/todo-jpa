@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
-import org.src.todojpa.repository.UserRepository;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -36,7 +35,6 @@ public class JwtUtil {
     private String secretKey;
     private Key key;
     private final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
-
     public static final Logger logger = LoggerFactory.getLogger("JWT 관련 로그");
 
     @PostConstruct
@@ -45,24 +43,54 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String getEmailFromRequest(HttpServletRequest request) {
-        String token = getTokenFromRequest(request);
+    public String extractTokenFromRequest(HttpServletRequest req) {
+        Cookie[] cookies = req.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
+                    return URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
+                }
+            }
+        }
+        return null;
+    }
 
+
+    public Long extractUserIdFromToken(String token) {
         if (!StringUtils.hasText(token)) throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
 
         String rawToken = substringToken(token);
-        validateToken(rawToken);
 
         Claims userInfo = getUserInfoFromToken(rawToken);
-        return userInfo.getSubject();
+        Long userId = (Long) userInfo.get("userId");
+        return userId;
     }
 
-    public String createToken(String email) {
+    public void validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+        } catch (SecurityException | MalformedJwtException e) {
+            logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+            throw new SecurityException();
+        } catch (ExpiredJwtException e) {
+            logger.error("Expired JWT token, 만료된 JWT token 입니다.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Expired JWT token, 만료된 JWT token 입니다.");
+        } catch (UnsupportedJwtException e) {
+            logger.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+            throw new UnsupportedJwtException(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            logger.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+            throw new IllformedLocaleException("잘못된 JWT 토큰 입니다.");
+        }
+    }
+
+    public String createToken(Long userId, String userEmail) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(email)
+                        .setSubject(userEmail)
+                        .setPayload(userId + "")
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                         .setIssuedAt(date)
                         .signWith(key, SIGNATURE_ALGORITHM)
@@ -86,37 +114,11 @@ public class JwtUtil {
         throw new NullPointerException("Not Found Token");
     }
 
-    private void validateToken(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-        } catch (SecurityException | MalformedJwtException e) {
-            logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
-            throw new SecurityException();
-        } catch (ExpiredJwtException e) {
-            logger.error("Expired JWT token, 만료된 JWT token 입니다.");
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Expired JWT token, 만료된 JWT token 입니다.");
-        } catch (UnsupportedJwtException e) {
-            logger.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
-            throw new UnsupportedJwtException(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            logger.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
-            throw new IllformedLocaleException("잘못된 JWT 토큰 입니다.");
-        }
-    }
-
     private Claims getUserInfoFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-    }
-
-    private String getTokenFromRequest(HttpServletRequest req) {
-        Cookie[] cookies = req.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
-                    return URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
-                }
-            }
-        }
-        return null;
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

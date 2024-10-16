@@ -1,12 +1,10 @@
 package org.src.todojpa.service;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.src.todojpa.config.PasswordEncoder;
-import org.src.todojpa.domain.dto.auth.AuthResponseDto;
 import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.jwt.JwtUtil;
 import org.src.todojpa.repository.UserRepository;
@@ -31,13 +29,13 @@ public class AuthService {
                 .build();
 
         User savedUser = this.userRepository.save(user);
-        return this.jwtUtil.createToken(savedUser.getEmail());
+        return this.jwtUtil.createToken(savedUser.getId(), savedUser.getEmail());
     }
 
     public String login(String email, String password){
         User user = authenticateUser(email, password);
 
-        return this.jwtUtil.createToken(user.getEmail());
+        return this.jwtUtil.createToken(user.getId(), user.getEmail());
     }
 
     private void validateDuplicateEmail(String email) {
