@@ -1,6 +1,7 @@
 package org.src.todojpa.service;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,8 +14,6 @@ import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.domain.entity.UserRole;
 import org.src.todojpa.repository.ScheduleRepository;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +53,13 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ScheduleResponseDto updateScheduleById(Long scheduleId, Long userId, UserRole role, String title, String contents) {
+    public ScheduleResponseDto updateScheduleById(
+            Long scheduleId,
+            Long userId,
+            UserRole role,
+            String title,
+            String contents
+    ) {
         Schedule schedule = findSchedule(scheduleId);
 
         if (schedule.validateWriter(userId) || role.isAdmin()) {

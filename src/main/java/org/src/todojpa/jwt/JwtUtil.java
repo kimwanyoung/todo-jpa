@@ -1,10 +1,27 @@
 package org.src.todojpa.jwt;
 
-import io.jsonwebtoken.*;
+import static org.src.todojpa.constants.AuthConstants.AUTHORITY;
+import static org.src.todojpa.constants.AuthConstants.AUTHORIZATION_HEADER;
+import static org.src.todojpa.constants.AuthConstants.BEARER_PREFIX;
+import static org.src.todojpa.constants.AuthConstants.JWT_SECRET_KEY;
+import static org.src.todojpa.constants.AuthConstants.SIGNATURE_ALGORITHM;
+import static org.src.todojpa.constants.AuthConstants.TOKEN_TIME;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.Base64;
+import java.util.Date;
+import java.util.IllformedLocaleException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,15 +31,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 import org.src.todojpa.domain.dto.user.VerifiedUserDto;
 import org.src.todojpa.domain.entity.UserRole;
-
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.Base64;
-import java.util.Date;
-import java.util.IllformedLocaleException;
-
-import static org.src.todojpa.constants.AuthConstants.*;
 
 @Slf4j(topic = "JWT Logger")
 @Component
@@ -54,7 +62,9 @@ public class JwtUtil {
 
 
     public VerifiedUserDto extractVerifiedUserFromToken(String token) {
-        if (!StringUtils.hasText(token)) throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
+        if (!StringUtils.hasText(token)) {
+            throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
+        }
 
         Claims userInfo = getUserInfoFromToken(token);
         Long userId = Long.parseLong(userInfo.getSubject());

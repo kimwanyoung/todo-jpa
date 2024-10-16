@@ -1,6 +1,7 @@
 package org.src.todojpa.service;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,8 +15,6 @@ import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.domain.entity.UserRole;
 import org.src.todojpa.repository.CommentRepository;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +58,8 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateCommentById(Long commentId, Long scheduleId, String contents, Long userId, UserRole role) {
+    public CommentResponseDto updateCommentById(Long commentId, Long scheduleId, String contents, Long userId,
+                                                UserRole role) {
         this.scheduleService.validateSchedule(scheduleId);
 
         Comment comment = findComment(commentId);

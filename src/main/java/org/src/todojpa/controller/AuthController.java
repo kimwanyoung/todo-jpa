@@ -1,8 +1,12 @@
 package org.src.todojpa.controller;
 
+import static org.src.todojpa.constants.AuthConstants.AUTHORIZATION_HEADER;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +18,6 @@ import org.src.todojpa.domain.dto.auth.AuthResponseDto;
 import org.src.todojpa.domain.dto.auth.LoginDto;
 import org.src.todojpa.domain.dto.auth.RegisterDto;
 import org.src.todojpa.service.AuthService;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
-import static org.src.todojpa.constants.AuthConstants.AUTHORIZATION_HEADER;
 
 @RestController
 @RequiredArgsConstructor

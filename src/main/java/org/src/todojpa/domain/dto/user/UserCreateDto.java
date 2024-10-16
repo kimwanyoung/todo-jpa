@@ -1,11 +1,11 @@
 package org.src.todojpa.domain.dto.user;
 
 
+import static org.src.todojpa.constants.GlobalConstants.EMAIL_REGEXP;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
-
-import static org.src.todojpa.constants.GlobalConstants.EMAIL_REGEXP;
 
 @Getter
 public class UserCreateDto {

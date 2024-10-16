@@ -1,5 +1,6 @@
 package org.src.todojpa.config;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -7,8 +8,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.src.todojpa.interceptor.AuthInterceptor;
 import org.src.todojpa.resolver.UserArgumentResolver;
-
-import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor

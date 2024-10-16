@@ -13,7 +13,9 @@ public enum UserRole {
 
     public static UserRole from(String authority) {
         for (UserRole userRole : UserRole.values()) {
-            if (authority.equals(userRole.role)) return userRole;
+            if (authority.equals(userRole.role)) {
+                return userRole;
+            }
         }
 
         throw new IllegalArgumentException("잘못된 권한입니다.");

@@ -1,12 +1,11 @@
 package org.src.todojpa.domain.dto.schedule;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.src.todojpa.domain.dto.user.UserResponseDto;
 import org.src.todojpa.domain.entity.Schedule;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
