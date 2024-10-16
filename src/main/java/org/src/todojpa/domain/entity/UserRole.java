@@ -1,6 +1,7 @@
 package org.src.todojpa.domain.entity;
 
 public enum UserRole {
+
     ADMIN("ADMIN"),
     USER("USER");
 

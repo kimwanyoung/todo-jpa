@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Schedule extends Timestamp {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,7 +40,7 @@ public class Schedule extends Timestamp {
         this.contents = contents;
     }
 
-    public boolean validateWriter(Long id){
+    public boolean validateWriter(Long id) {
         return user.checkId(id);
     }
 }

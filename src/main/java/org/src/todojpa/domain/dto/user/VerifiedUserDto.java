@@ -7,6 +7,7 @@ import org.src.todojpa.domain.entity.UserRole;
 @Getter
 @RequiredArgsConstructor
 public class VerifiedUserDto {
+
     private final Long userId;
     private final UserRole role;
 }

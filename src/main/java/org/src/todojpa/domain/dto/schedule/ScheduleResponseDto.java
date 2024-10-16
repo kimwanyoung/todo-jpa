@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class ScheduleResponseDto {
+
     private Long id;
     private String title;
     private String contents;

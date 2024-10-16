@@ -9,6 +9,7 @@ import static org.src.todojpa.constants.GlobalConstants.EMAIL_REGEXP;
 
 @Getter
 public class UserCreateDto {
+    
     @NotBlank(message = "이름은 필수입니다.")
     private String name;
 

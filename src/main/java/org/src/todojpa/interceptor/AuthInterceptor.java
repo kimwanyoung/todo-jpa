@@ -16,7 +16,11 @@ public class AuthInterceptor implements HandlerInterceptor {
     private final JwtUtil jwtUtil;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Object handler
+    ) throws RuntimeException {
         try {
             String token = this.jwtUtil.extractTokenFromRequest(request);
             this.jwtUtil.validateToken(token);

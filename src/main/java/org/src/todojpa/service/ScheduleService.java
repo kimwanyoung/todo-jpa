@@ -39,6 +39,7 @@ public class ScheduleService {
         return ScheduleResponseDto.from(schedule);
     }
 
+    @Transactional
     public ScheduleResponseDto createSchedule(String title, String contents, Long userId) {
         User user = this.userService.findUserById(userId);
         Schedule schedule = Schedule.builder()
