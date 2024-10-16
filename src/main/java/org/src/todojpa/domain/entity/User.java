@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.src.todojpa.config.PasswordEncoder;
 
 import java.util.Objects;
 

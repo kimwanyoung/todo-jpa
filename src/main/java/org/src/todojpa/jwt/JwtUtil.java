@@ -48,7 +48,8 @@ public class JwtUtil {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
-                    return URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
+                    String bearerToken = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
+                    return substringToken(bearerToken);
                 }
             }
         }
@@ -59,10 +60,9 @@ public class JwtUtil {
     public Long extractUserIdFromToken(String token) {
         if (!StringUtils.hasText(token)) throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
 
-        String rawToken = substringToken(token);
+        Claims userInfo = getUserInfoFromToken(token);
+        Long userId = Long.parseLong(userInfo.getSubject());
 
-        Claims userInfo = getUserInfoFromToken(rawToken);
-        Long userId = (Long) userInfo.get("userId");
         return userId;
     }
 
@@ -84,13 +84,12 @@ public class JwtUtil {
         }
     }
 
-    public String createToken(Long userId, String userEmail) {
+    public String createToken(Long userId) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(userEmail)
-                        .setPayload(userId + "")
+                        .setSubject(userId+"")
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                         .setIssuedAt(date)
                         .signWith(key, SIGNATURE_ALGORITHM)

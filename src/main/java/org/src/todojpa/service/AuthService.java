@@ -1,10 +1,11 @@
 package org.src.todojpa.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import org.src.todojpa.config.PasswordEncoder;
+import org.src.todojpa.security.PasswordEncoder;
 import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.jwt.JwtUtil;
 import org.src.todojpa.repository.UserRepository;
@@ -17,6 +18,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
+    @Transactional
     public String signup(String name, String email, String password) {
         validateDuplicateEmail(email);
 
@@ -29,13 +31,13 @@ public class AuthService {
                 .build();
 
         User savedUser = this.userRepository.save(user);
-        return this.jwtUtil.createToken(savedUser.getId(), savedUser.getEmail());
+        return this.jwtUtil.createToken(savedUser.getId());
     }
 
     public String login(String email, String password){
         User user = authenticateUser(email, password);
 
-        return this.jwtUtil.createToken(user.getId(), user.getEmail());
+        return this.jwtUtil.createToken(user.getId());
     }
 
     private void validateDuplicateEmail(String email) {

@@ -1,4 +1,4 @@
-package org.src.todojpa.config;
+package org.src.todojpa.security;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;

@@ -33,7 +33,9 @@ public class AuthController {
         String password = req.getPassword();
 
         String token = this.authService.signup(username, email, password);
-        jwtUtil.addJwtToCookie(token, response);
+
+        this.jwtUtil.addJwtToCookie(token, response);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(AuthResponseDto.from(token));
@@ -48,10 +50,11 @@ public class AuthController {
         String password = req.getPassword();
 
         String token = this.authService.login(email, password);
-        jwtUtil.addJwtToCookie(token, response);
+
+        this.jwtUtil.addJwtToCookie(token, response);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(AuthResponseDto.from(token));
     }
-
 }
