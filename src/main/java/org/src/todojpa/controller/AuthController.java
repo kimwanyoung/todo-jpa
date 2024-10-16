@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.src.todojpa.domain.dto.auth.AuthResponseDto;
 import org.src.todojpa.domain.dto.auth.LoginDto;
 import org.src.todojpa.domain.dto.auth.RegisterDto;
+import org.src.todojpa.jwt.JwtUtil;
 import org.src.todojpa.service.AuthService;
 
 @RestController
@@ -20,6 +21,7 @@ import org.src.todojpa.service.AuthService;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDto> register(
@@ -30,9 +32,11 @@ public class AuthController {
         String email = req.getEmail();
         String password = req.getPassword();
 
+        String token = this.authService.signup(username, email, password);
+        jwtUtil.addJwtToCookie(token, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.authService.signup(username, email, password, response));
+                .body(AuthResponseDto.from(token));
     }
 
     @PostMapping("/login")
@@ -43,9 +47,11 @@ public class AuthController {
         String email = req.getEmail();
         String password = req.getPassword();
 
+        String token = this.authService.login(email, password);
+        jwtUtil.addJwtToCookie(token, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.authService.login(email, password, response));
+                .body(AuthResponseDto.from(token));
     }
 
 }

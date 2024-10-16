@@ -26,10 +26,12 @@ public class AuthFilter implements Filter {
 
         if (isAuthNotRequired(url)) {
             chain.doFilter(request, response);
-        } else {
-            this.jwtUtil.authenticateRequest(httpServletRequest);
-            chain.doFilter(request, response);
+            return;
         }
+
+        String email = this.jwtUtil.getEmailFromRequest(httpServletRequest);
+        request.setAttribute("email", email);
+        chain.doFilter(request, response);
     }
 
     private boolean isAuthNotRequired(String url) {

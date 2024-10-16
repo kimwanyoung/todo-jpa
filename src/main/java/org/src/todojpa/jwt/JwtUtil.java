@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
-import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.repository.UserRepository;
 
 import java.net.URLDecoder;
@@ -37,7 +36,6 @@ public class JwtUtil {
     private String secretKey;
     private Key key;
     private final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
-    private final UserRepository userRepository;
 
     public static final Logger logger = LoggerFactory.getLogger("JWT 관련 로그");
 
@@ -47,19 +45,16 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public void authenticateRequest(HttpServletRequest request) {
+    public String getEmailFromRequest(HttpServletRequest request) {
         String token = getTokenFromRequest(request);
 
         if (!StringUtils.hasText(token)) throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
 
-        String substringToken = substringToken(token);
-        validateToken(substringToken);
+        String rawToken = substringToken(token);
+        validateToken(rawToken);
 
-        Claims userInfo = getUserInfoFromToken(substringToken);
-        User user = this.userRepository.findByEmail(userInfo.getSubject()).orElseThrow(() ->
-                new IllegalArgumentException("Not Found User")
-        );
-        request.setAttribute("userId", user.getId());
+        Claims userInfo = getUserInfoFromToken(rawToken);
+        return userInfo.getSubject();
     }
 
     public String createToken(String email) {
@@ -83,7 +78,7 @@ public class JwtUtil {
         res.addCookie(cookie);
     }
 
-    public String substringToken(String tokenValue) {
+    private String substringToken(String tokenValue) {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }

@@ -19,24 +19,25 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public AuthResponseDto signup(String name, String email, String password, HttpServletResponse response) {
+    public String signup(String name, String email, String password) {
         validateDuplicateEmail(email);
 
         String encodedPassword = passwordEncoder.encode(password);
+
         User user = User.builder()
                 .name(name)
                 .email(email)
                 .password(encodedPassword)
                 .build();
-        this.userRepository.save(user);
 
-        return generateAuthResponse(email, response);
+        User savedUser = this.userRepository.save(user);
+        return this.jwtUtil.createToken(savedUser.getEmail());
     }
 
-    public AuthResponseDto login(String email, String password, HttpServletResponse response){
+    public String login(String email, String password){
         User user = authenticateUser(email, password);
 
-        return generateAuthResponse(user.getEmail(), response);
+        return this.jwtUtil.createToken(user.getEmail());
     }
 
     private void validateDuplicateEmail(String email) {
@@ -55,11 +56,5 @@ public class AuthService {
         }
 
         return user;
-    }
-
-    private AuthResponseDto generateAuthResponse(String email, HttpServletResponse response) {
-        String token = this.jwtUtil.createToken(email);
-        this.jwtUtil.addJwtToCookie(token, response);
-        return AuthResponseDto.from(token);
     }
 }
