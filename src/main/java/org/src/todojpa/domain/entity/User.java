@@ -34,11 +34,11 @@ public class User extends Timestamp {
     private UserRole role;
 
     public void update(String name, String email) {
-        if(name != null) {
+        if (name != null) {
             this.name = name;
         }
 
-        if(email != null) {
+        if (email != null) {
             this.email = email;
         }
     }

@@ -57,7 +57,7 @@ public class ScheduleService {
     public ScheduleResponseDto updateScheduleById(Long scheduleId, Long userId, UserRole role, String title, String contents) {
         Schedule schedule = findSchedule(scheduleId);
 
-        if(schedule.validateWriter(userId) || role.isAdmin()) {
+        if (schedule.validateWriter(userId) || role.isAdmin()) {
             schedule.update(title, contents);
 
             return ScheduleResponseDto.from(schedule);

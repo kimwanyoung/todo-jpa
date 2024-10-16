@@ -39,7 +39,7 @@ public class AuthService {
         return this.jwtUtil.createToken(savedUser.getId(), role);
     }
 
-    public String login(String email, String password){
+    public String login(String email, String password) {
         User user = authenticateUser(email, password);
 
         return this.jwtUtil.createToken(user.getId(), user.getRole());
@@ -56,7 +56,7 @@ public class AuthService {
                 new IllegalArgumentException("등록된 사용자가 없습니다.")
         );
 
-        if(!passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
         }
 
