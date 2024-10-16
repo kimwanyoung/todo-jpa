@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,20 +26,17 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.IllformedLocaleException;
 
+import static org.src.todojpa.constants.AuthConstants.*;
+import static org.src.todojpa.constants.GlobalConstants.*;
+
+@Slf4j(topic = "JWT Logger")
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String BEARER_PREFIX = "Bearer ";
-    public static final String AUTHORITY = "Authority";
-    private final long TOKEN_TIME = 60 * 60 * 1000L;
-
-    @Value("${jwt.secret.key}")
+    @Value(JWT_SECRET_KEY)
     private String secretKey;
     private Key key;
-    private final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
-    public static final Logger logger = LoggerFactory.getLogger("JWT 관련 로그");
 
     @PostConstruct
     public void init() {
@@ -74,16 +72,16 @@ public class JwtUtil {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
         } catch (SecurityException | MalformedJwtException e) {
-            logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+            log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
             throw new SecurityException();
         } catch (ExpiredJwtException e) {
-            logger.error("Expired JWT token, 만료된 JWT token 입니다.");
+            log.error("Expired JWT token, 만료된 JWT token 입니다.");
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Expired JWT token, 만료된 JWT token 입니다.");
         } catch (UnsupportedJwtException e) {
-            logger.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+            log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
             throw new UnsupportedJwtException(e.getMessage());
         } catch (IllegalArgumentException e) {
-            logger.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+            log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
             throw new IllformedLocaleException("잘못된 JWT 토큰 입니다.");
         }
     }
@@ -101,20 +99,11 @@ public class JwtUtil {
                         .compact();
     }
 
-    public void addJwtToCookie(String token, HttpServletResponse res) {
-        token = URLEncoder.encode(token, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
-
-        Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token);
-        cookie.setPath("/");
-
-        res.addCookie(cookie);
-    }
-
     private String substringToken(String tokenValue) {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }
-        logger.error("Not Found Token");
+        log.error("Not Found Token");
         throw new NullPointerException("Not Found Token");
     }
 
