@@ -2,7 +2,7 @@ package org.src.todojpa.domain.dto.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.src.todojpa.domain.UserRole;
+import org.src.todojpa.domain.entity.UserRole;
 
 @Getter
 @RequiredArgsConstructor

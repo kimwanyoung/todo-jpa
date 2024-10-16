@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.src.todojpa.domain.UserRole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +39,7 @@ public class Schedule extends Timestamp {
         this.contents = contents;
     }
 
-    public boolean validateWriterByUserId(Long id){
+    public boolean validateWriter(Long id){
         return user.checkId(id);
     }
 }

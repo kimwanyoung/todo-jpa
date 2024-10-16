@@ -5,11 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import org.src.todojpa.domain.dto.comment.CommentResponseDto;
 import org.src.todojpa.domain.entity.Comment;
 import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.domain.entity.User;
+import org.src.todojpa.domain.entity.UserRole;
 import org.src.todojpa.repository.CommentRepository;
 
 import java.util.List;
@@ -23,8 +26,8 @@ public class CommentService {
     private final ScheduleService scheduleService;
 
     public Page<CommentResponseDto> retrieveComments(Long scheduleId, Pageable pageable) {
-        this.scheduleService.validateScheduleExists(scheduleId);
-        Page<Comment> comments = this.commentRepository.findCommentsByScheduleId(scheduleId ,pageable);
+        this.scheduleService.validateSchedule(scheduleId);
+        Page<Comment> comments = this.commentRepository.findCommentsByScheduleId(scheduleId, pageable);
 
         List<CommentResponseDto> commentResponseDtos = comments.getContent().stream()
                 .map(CommentResponseDto::from)
@@ -34,15 +37,15 @@ public class CommentService {
     }
 
     public CommentResponseDto retrieveCommentById(Long commentId, Long scheduleId) {
-        this.scheduleService.validateScheduleExists(scheduleId);
-        Comment comment = findCommentById(commentId);
+        this.scheduleService.validateSchedule(scheduleId);
+        Comment comment = findComment(commentId);
 
         return CommentResponseDto.from(comment);
     }
 
     @Transactional
-    public CommentResponseDto createComment(String contents , Long scheduleId, Long userId) {
-        Schedule schedule = this.scheduleService.findScheduleById(scheduleId);
+    public CommentResponseDto createComment(String contents, Long scheduleId, Long userId) {
+        Schedule schedule = this.scheduleService.findSchedule(scheduleId);
         User user = this.userService.findUserById(userId);
 
         Comment comment = Comment.builder()
@@ -56,25 +59,38 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateCommentById(Long commentId, Long userId, String contents) {
-        Comment comment = findCommentById(commentId);
+    public CommentResponseDto updateCommentById(Long commentId, Long scheduleId, String contents, Long userId, UserRole role) {
+        this.scheduleService.validateSchedule(scheduleId);
 
-        comment.checkUserById(userId);
-        comment.update(contents);
+        Comment comment = findComment(commentId);
 
-        return CommentResponseDto.from(comment);
+        if (comment.validateWriter(userId) || role.isAdmin()) {
+            comment.validateWriter(userId);
+            comment.update(contents);
+
+            return CommentResponseDto.from(comment);
+        }
+
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "권한이 없습니다.");
     }
 
-    public CommentResponseDto deleteCommentById(Long commentId, Long scheduleId) {
-        this.scheduleService.validateScheduleExists(scheduleId);
-        Comment comment = findCommentById(commentId);
+    @Transactional
+    public CommentResponseDto deleteCommentById(Long commentId, Long scheduleId, Long userId, UserRole role) {
+        this.scheduleService.validateSchedule(scheduleId);
 
-        this.commentRepository.delete(comment);
+        Comment comment = findComment(commentId);
 
-        return CommentResponseDto.from(comment);
+        if (comment.validateWriter(userId) || role.isAdmin()) {
+            comment.validateWriter(userId);
+            this.commentRepository.delete(comment);
+
+            return CommentResponseDto.from(comment);
+        }
+
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "권한이 없습니다.");
     }
 
-    private Comment findCommentById(Long commentId) {
+    private Comment findComment(Long commentId) {
         return this.commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
     }

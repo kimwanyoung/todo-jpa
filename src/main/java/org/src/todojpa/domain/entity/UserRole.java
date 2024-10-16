@@ -1,18 +1,18 @@
-package org.src.todojpa.domain;
+package org.src.todojpa.domain.entity;
 
 public enum UserRole {
     ADMIN("ADMIN"),
     USER("USER");
 
-    private final String authority;
+    private final String role;
 
     UserRole(String authority) {
-        this.authority = authority;
+        this.role = authority;
     }
 
     public static UserRole from(String authority) {
-        for(UserRole role : UserRole.values()) {
-            if(authority.equals(role.authority)) return role;
+        for(UserRole userRole : UserRole.values()) {
+            if(authority.equals(userRole.role)) return userRole;
         }
 
         throw new IllegalArgumentException("잘못된 권한입니다.");

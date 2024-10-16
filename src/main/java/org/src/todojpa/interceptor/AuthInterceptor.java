@@ -19,7 +19,6 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         try {
             String token = this.jwtUtil.extractTokenFromRequest(request);
-            log.info("[Log] : " + token);
             this.jwtUtil.validateToken(token);
             return true;
         } catch (Exception e) {

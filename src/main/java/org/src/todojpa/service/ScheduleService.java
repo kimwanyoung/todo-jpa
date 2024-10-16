@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import org.src.todojpa.domain.UserRole;
+import org.src.todojpa.domain.entity.UserRole;
 import org.src.todojpa.domain.dto.schedule.ScheduleResponseDto;
 import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.domain.entity.User;
@@ -34,7 +34,7 @@ public class ScheduleService {
     }
 
     public ScheduleResponseDto retrieveScheduleById(Long scheduleId) {
-        Schedule schedule = findScheduleById(scheduleId);
+        Schedule schedule = findSchedule(scheduleId);
 
         return ScheduleResponseDto.from(schedule);
     }
@@ -54,9 +54,9 @@ public class ScheduleService {
 
     @Transactional
     public ScheduleResponseDto updateScheduleById(Long scheduleId, Long userId, UserRole role, String title, String contents) {
-        Schedule schedule = findScheduleById(scheduleId);
+        Schedule schedule = findSchedule(scheduleId);
 
-        if(schedule.validateWriterByUserId(userId) || role.isAdmin()) {
+        if(schedule.validateWriter(userId) || role.isAdmin()) {
             schedule.update(title, contents);
 
             return ScheduleResponseDto.from(schedule);
@@ -67,9 +67,9 @@ public class ScheduleService {
 
 
     public ScheduleResponseDto deleteScheduleById(Long scheduleId, Long userId, UserRole role) {
-        Schedule schedule = findScheduleById(scheduleId);
+        Schedule schedule = findSchedule(scheduleId);
 
-        if (schedule.validateWriterByUserId(userId)  || role.isAdmin()) {
+        if (schedule.validateWriter(userId) || role.isAdmin()) {
             this.scheduleRepository.delete(schedule);
 
             return ScheduleResponseDto.from(schedule);
@@ -78,13 +78,13 @@ public class ScheduleService {
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "권한이 없습니다.");
     }
 
-    public void validateScheduleExists(Long scheduleId) {
+    public void validateSchedule(Long scheduleId) {
         if (!scheduleRepository.existsById(scheduleId)) {
             throw new IllegalArgumentException("존재하지 않는 일정입니다.");
         }
     }
 
-    public Schedule findScheduleById(Long id) {
+    public Schedule findSchedule(Long id) {
         return this.scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일정입니다."));
     }

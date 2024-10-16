@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import org.src.todojpa.domain.UserRole;
+import org.src.todojpa.domain.entity.UserRole;
 import org.src.todojpa.security.PasswordEncoder;
 import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.jwt.JwtUtil;
@@ -25,20 +25,24 @@ public class AuthService {
 
         String encodedPassword = passwordEncoder.encode(password);
 
+        // FIXME: 관리자 테스트 위한 코드, 추후 관리자 생성 방법이 생기면 제거 예정
+        UserRole role = name.equals("admin") ? UserRole.ADMIN : UserRole.USER;
+
         User user = User.builder()
                 .name(name)
                 .email(email)
+                .role(role)
                 .password(encodedPassword)
                 .build();
 
         User savedUser = this.userRepository.save(user);
-        return this.jwtUtil.createToken(savedUser.getId(), UserRole.USER);
+        return this.jwtUtil.createToken(savedUser.getId(), role);
     }
 
     public String login(String email, String password){
         User user = authenticateUser(email, password);
 
-        return this.jwtUtil.createToken(user.getId(), UserRole.USER);
+        return this.jwtUtil.createToken(user.getId(), user.getRole());
     }
 
     private void validateDuplicateEmail(String email) {

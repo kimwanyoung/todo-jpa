@@ -12,6 +12,7 @@ import org.src.todojpa.domain.dto.comment.CommentCreateDto;
 import org.src.todojpa.domain.dto.comment.CommentResponseDto;
 import org.src.todojpa.domain.dto.comment.CommentUpdateDto;
 import org.src.todojpa.domain.dto.user.VerifiedUserDto;
+import org.src.todojpa.domain.entity.UserRole;
 import org.src.todojpa.service.CommentService;
 
 @RestController
@@ -63,14 +64,16 @@ public class CommentController {
 
     @PatchMapping("/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(
+            @PathVariable Long scheduleId,
             @PathVariable Long commentId,
             @RequestBody CommentUpdateDto req,
             VerifiedUserDto verifiedUserDto
     ) {
         String contents = req.getContents();
         Long userId = verifiedUserDto.getUserId();
+        UserRole role = verifiedUserDto.getRole();
 
-        CommentResponseDto commentResponseDto = this.commentService.updateCommentById(commentId, userId, contents);
+        CommentResponseDto commentResponseDto = this.commentService.updateCommentById(commentId, scheduleId, contents, userId, role);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -80,10 +83,14 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<CommentResponseDto> deleteComment(
             @PathVariable Long scheduleId,
-            @PathVariable Long commentId
+            @PathVariable Long commentId,
+            VerifiedUserDto verifiedUserDto
     ) {
+        Long userId = verifiedUserDto.getUserId();
+        UserRole role = verifiedUserDto.getRole();
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.commentService.deleteCommentById(commentId, scheduleId));
+                .body(this.commentService.deleteCommentById(commentId, scheduleId, userId, role));
     }
 }

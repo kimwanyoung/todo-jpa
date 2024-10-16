@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
-import org.src.todojpa.domain.UserRole;
+import org.src.todojpa.domain.entity.UserRole;
 import org.src.todojpa.domain.dto.user.VerifiedUserDto;
 
 import java.net.URLDecoder;
