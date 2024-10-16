@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @Entity
 @Getter
@@ -23,11 +25,11 @@ public class Comment extends Timestamp {
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn
     private Schedule schedule;
 
     public void update(String contents) {
@@ -36,7 +38,7 @@ public class Comment extends Timestamp {
 
     public void checkUserById(Long userId) {
         if (!this.user.checkId(userId)) {
-            throw new IllegalStateException("권한이 없습니다");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"권한이 없습니다");
         }
     }
 }

@@ -63,7 +63,6 @@ public class CommentController {
 
     @PatchMapping("/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(
-            @PathVariable Long scheduleId,
             @PathVariable Long commentId,
             @RequestBody CommentUpdateDto req,
             VerifiedUserDto verifiedUserDto
@@ -71,7 +70,7 @@ public class CommentController {
         String contents = req.getContents();
         Long userId = verifiedUserDto.getUserId();
 
-        CommentResponseDto commentResponseDto = this.commentService.updateCommentById(commentId, scheduleId, userId, contents);
+        CommentResponseDto commentResponseDto = this.commentService.updateCommentById(commentId, userId, contents);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

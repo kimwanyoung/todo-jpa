@@ -15,16 +15,20 @@ public class ScheduleResponseDto {
     private Long id;
     private String title;
     private String contents;
+    private Integer commentsSize;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private UserResponseDto user;
 
     public static ScheduleResponseDto from(Schedule schedule) {
         UserResponseDto user = UserResponseDto.from(schedule.getUser());
+        int commentsSize = schedule.getComments() == null ? 0 : schedule.getComments().size();
+
         return ScheduleResponseDto.builder()
                 .id(schedule.getId())
                 .title(schedule.getTitle())
                 .contents(schedule.getContents())
+                .commentsSize(commentsSize)
                 .user(user)
                 .createdAt(schedule.getCreatedAt())
                 .modifiedAt(schedule.getModifiedAt())

@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @Table
@@ -27,18 +30,28 @@ public class Schedule extends Timestamp {
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 
     public void update(String title, String contents) {
         this.title = title;
         this.contents = contents;
     }
 
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
     public void validateWriterByUserId(Long id){
         if(!user.checkId(id)) {
             throw new IllegalStateException("권한이 없습니다.");
         }
+    }
+
+    public void deleteComment(Comment comment) {
+        this.comments.remove(comment);
     }
 }

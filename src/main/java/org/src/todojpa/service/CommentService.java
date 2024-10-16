@@ -42,8 +42,6 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto createComment(String contents , Long scheduleId, Long userId) {
-        this.scheduleService.validateScheduleExists(scheduleId);
-
         Schedule schedule = this.scheduleService.findScheduleById(scheduleId);
         User user = this.userService.findUserById(userId);
 
@@ -58,8 +56,7 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateCommentById(Long commentId, Long scheduleId, Long userId, String contents) {
-        this.scheduleService.validateScheduleExists(scheduleId);
+    public CommentResponseDto updateCommentById(Long commentId, Long userId, String contents) {
         Comment comment = findCommentById(commentId);
 
         comment.checkUserById(userId);
