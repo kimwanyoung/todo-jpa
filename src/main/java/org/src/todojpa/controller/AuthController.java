@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.src.todojpa.domain.dto.auth.AuthResponseDto;
 import org.src.todojpa.domain.dto.auth.LoginDto;
 import org.src.todojpa.domain.dto.auth.RegisterDto;
-import org.src.todojpa.jwt.JwtUtil;
 import org.src.todojpa.service.AuthService;
 
 import java.net.URLEncoder;

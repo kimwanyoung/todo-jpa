@@ -5,21 +5,17 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
-import org.src.todojpa.domain.entity.UserRole;
 import org.src.todojpa.domain.dto.user.VerifiedUserDto;
+import org.src.todojpa.domain.entity.UserRole;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
@@ -27,7 +23,6 @@ import java.util.Date;
 import java.util.IllformedLocaleException;
 
 import static org.src.todojpa.constants.AuthConstants.*;
-import static org.src.todojpa.constants.GlobalConstants.*;
 
 @Slf4j(topic = "JWT Logger")
 @Component

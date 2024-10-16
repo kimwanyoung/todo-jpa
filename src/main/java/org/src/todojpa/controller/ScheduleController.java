@@ -10,11 +10,11 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.src.todojpa.domain.entity.UserRole;
 import org.src.todojpa.domain.dto.schedule.ScheduleCreateDto;
 import org.src.todojpa.domain.dto.schedule.ScheduleResponseDto;
 import org.src.todojpa.domain.dto.schedule.ScheduleUpdateDto;
 import org.src.todojpa.domain.dto.user.VerifiedUserDto;
+import org.src.todojpa.domain.entity.UserRole;
 import org.src.todojpa.service.ScheduleService;
 
 @Slf4j(topic = "schedule controller")

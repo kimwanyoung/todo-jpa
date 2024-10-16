@@ -8,10 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import org.src.todojpa.domain.entity.UserRole;
 import org.src.todojpa.domain.dto.schedule.ScheduleResponseDto;
 import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.domain.entity.User;
+import org.src.todojpa.domain.entity.UserRole;
 import org.src.todojpa.repository.ScheduleRepository;
 
 import java.util.List;

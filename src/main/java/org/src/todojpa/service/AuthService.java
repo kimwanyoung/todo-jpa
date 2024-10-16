@@ -5,11 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import org.src.todojpa.domain.entity.UserRole;
-import org.src.todojpa.security.PasswordEncoder;
 import org.src.todojpa.domain.entity.User;
+import org.src.todojpa.domain.entity.UserRole;
 import org.src.todojpa.jwt.JwtUtil;
 import org.src.todojpa.repository.UserRepository;
+import org.src.todojpa.security.PasswordEncoder;
 
 @Service
 @RequiredArgsConstructor
