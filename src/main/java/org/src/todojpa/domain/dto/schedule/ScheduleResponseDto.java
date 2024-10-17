@@ -21,7 +21,7 @@ public class ScheduleResponseDto {
     private UserResponseDto user;
 
     public static ScheduleResponseDto from(Schedule schedule) {
-        UserResponseDto user = UserResponseDto.from(schedule.getUser());
+        UserResponseDto user = UserResponseDto.from(schedule.getAuthor());
         int commentsSize = schedule.getComments() == null ? 0 : schedule.getComments().size();
 
         return ScheduleResponseDto.builder()

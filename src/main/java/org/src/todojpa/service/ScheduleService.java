@@ -44,7 +44,7 @@ public class ScheduleService {
         Schedule schedule = Schedule.builder()
                 .title(title)
                 .contents(contents)
-                .user(user)
+                .author(user)
                 .build();
 
         Schedule savedSchedule = this.scheduleRepository.save(schedule);
