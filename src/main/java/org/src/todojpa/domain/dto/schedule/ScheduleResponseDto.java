@@ -41,10 +41,11 @@ public class ScheduleResponseDto {
 
     public static ScheduleResponseDto of(Schedule schedule, List<UserSchedule> userSchedules) {
         UserResponseDto author = UserResponseDto.from(schedule.getAuthor());
-        List<UserResponseDto> managers = userSchedules == null ? List.of() : userSchedules.stream()
+        List<UserResponseDto> managers = userSchedules.stream()
                 .map(UserSchedule::getManager)
                 .map(UserResponseDto::from)
                 .toList();
+
         int commentsSize = schedule.getComments() == null ? 0 : schedule.getComments().size();
 
         return ScheduleResponseDto.builder()
