@@ -9,6 +9,7 @@ import org.src.todojpa.domain.entity.User;
 @Setter
 @Builder
 public class UserResponseDto {
+
     private Long id;
     private String name;
     private String email;

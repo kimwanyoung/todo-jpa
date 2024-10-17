@@ -58,8 +58,13 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateCommentById(Long commentId, Long scheduleId, String contents, Long userId,
-                                                UserRole role) {
+    public CommentResponseDto updateCommentById(
+            Long commentId,
+            Long scheduleId,
+            String contents,
+            Long userId,
+            UserRole role
+    ) {
         this.scheduleService.validateSchedule(scheduleId);
 
         Comment comment = findComment(commentId);
@@ -75,7 +80,12 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto deleteCommentById(Long commentId, Long scheduleId, Long userId, UserRole role) {
+    public CommentResponseDto deleteCommentById(
+            Long commentId,
+            Long scheduleId,
+            Long userId,
+            UserRole role
+    ) {
         this.scheduleService.validateSchedule(scheduleId);
 
         Comment comment = findComment(commentId);

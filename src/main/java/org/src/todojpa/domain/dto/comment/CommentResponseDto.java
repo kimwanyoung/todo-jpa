@@ -11,6 +11,7 @@ import org.src.todojpa.domain.entity.Comment;
 @Setter
 @Builder
 public class CommentResponseDto {
+
     private Long id;
     private String contents;
     private LocalDateTime createdAt;
