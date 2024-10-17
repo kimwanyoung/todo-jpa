@@ -110,7 +110,7 @@ public class ScheduleController {
         Long authorId = verifiedUserDto.getUserId();
         Long managerId = req.getManagerId();
 
-        Long addedUserId = this.scheduleService.assignManagerToSchedule(id, authorId, managerId);
+        Long addedUserId = this.scheduleService.addManagerToSchedule(id, authorId, managerId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

@@ -92,7 +92,7 @@ public class ScheduleService {
     }
 
     @Transactional
-    public Long assignManagerToSchedule(Long scheduleId, Long authorId, Long managerId) {
+    public Long addManagerToSchedule(Long scheduleId, Long authorId, Long managerId) {
         Schedule schedule = findSchedule(scheduleId);
         User author = this.userService.findUser(authorId);
         User manager = this.userService.findUser(managerId);

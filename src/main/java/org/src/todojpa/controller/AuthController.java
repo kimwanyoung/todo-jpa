@@ -36,7 +36,7 @@ public class AuthController {
         String password = req.getPassword();
 
         String token = this.authService.signup(username, email, password);
-        setJwtToCookie(token, response);
+        assignJwtToCookie(token, response);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -52,14 +52,14 @@ public class AuthController {
         String password = req.getPassword();
 
         String token = this.authService.login(email, password);
-        setJwtToCookie(token, response);
+        assignJwtToCookie(token, response);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(AuthResponseDto.from(token));
     }
 
-    private void setJwtToCookie(String token, HttpServletResponse response) {
+    private void assignJwtToCookie(String token, HttpServletResponse response) {
         token = URLEncoder.encode(token, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
 
         Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token);
