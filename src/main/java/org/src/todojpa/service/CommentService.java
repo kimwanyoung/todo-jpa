@@ -45,7 +45,7 @@ public class CommentService {
     @Transactional
     public CommentResponseDto createComment(String contents, Long scheduleId, Long userId) {
         Schedule schedule = this.scheduleService.findSchedule(scheduleId);
-        User user = this.userService.findUserById(userId);
+        User user = this.userService.findUser(userId);
 
         Comment comment = Comment.builder()
                 .contents(contents)

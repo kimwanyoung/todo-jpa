@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.src.todojpa.domain.dto.schedule.AddManagerDto;
 import org.src.todojpa.domain.dto.schedule.ScheduleCreateDto;
 import org.src.todojpa.domain.dto.schedule.ScheduleResponseDto;
 import org.src.todojpa.domain.dto.schedule.ScheduleUpdateDto;
@@ -98,5 +99,21 @@ public class ScheduleController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(scheduleResponseDto);
+    }
+
+    @PostMapping("/{id}/manager")
+    public ResponseEntity<Long> addManager(
+            @PathVariable Long id,
+            @RequestBody AddManagerDto req,
+            VerifiedUserDto verifiedUserDto
+    ) {
+        Long authorId = verifiedUserDto.getUserId();
+        Long managerId = req.getManagerId();
+
+        Long addedUserId = this.scheduleService.assignManagerToSchedule(id, authorId, managerId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(addedUserId);
     }
 }

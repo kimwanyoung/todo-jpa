@@ -13,20 +13,26 @@ import org.src.todojpa.domain.dto.schedule.ScheduleResponseDto;
 import org.src.todojpa.domain.entity.Schedule;
 import org.src.todojpa.domain.entity.User;
 import org.src.todojpa.domain.entity.UserRole;
+import org.src.todojpa.domain.entity.UserSchedule;
 import org.src.todojpa.repository.ScheduleRepository;
+import org.src.todojpa.repository.UserScheduleRepository;
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final UserScheduleRepository userScheduleRepository;
     private final UserService userService;
 
     public Page<ScheduleResponseDto> retrieveSchedules(Pageable pageable) {
         Page<Schedule> schedules = this.scheduleRepository.findAll(pageable);
 
         List<ScheduleResponseDto> scheduleResponseDtos = schedules.getContent().stream()
-                .map(ScheduleResponseDto::from)
+                .map((schedule -> {
+                    List<UserSchedule> managers = this.userScheduleRepository.findByScheduleId(schedule.getId());
+                    return ScheduleResponseDto.of(schedule, managers);
+                }))
                 .toList();
 
         return new PageImpl<>(scheduleResponseDtos, pageable, schedules.getTotalPages());
@@ -34,13 +40,14 @@ public class ScheduleService {
 
     public ScheduleResponseDto retrieveScheduleById(Long scheduleId) {
         Schedule schedule = findSchedule(scheduleId);
+        List<UserSchedule> managers = this.userScheduleRepository.findByScheduleId(scheduleId);
 
-        return ScheduleResponseDto.from(schedule);
+        return ScheduleResponseDto.of(schedule, managers);
     }
 
     @Transactional
     public ScheduleResponseDto createSchedule(String title, String contents, Long userId) {
-        User user = this.userService.findUserById(userId);
+        User user = this.userService.findUser(userId);
         Schedule schedule = Schedule.builder()
                 .title(title)
                 .contents(contents)
@@ -79,6 +86,25 @@ public class ScheduleService {
             this.scheduleRepository.delete(schedule);
 
             return ScheduleResponseDto.from(schedule);
+        }
+
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "권한이 없습니다.");
+    }
+
+    @Transactional
+    public Long assignManagerToSchedule(Long scheduleId, Long authorId, Long managerId) {
+        Schedule schedule = findSchedule(scheduleId);
+        User author = this.userService.findUser(authorId);
+        User manager = this.userService.findUser(managerId);
+
+        if (schedule.validateWriter(authorId) || author.isAdmin()) {
+            UserSchedule userSchedule = UserSchedule.builder()
+                    .schedule(schedule)
+                    .manager(manager)
+                    .build();
+
+            this.userScheduleRepository.save(userSchedule);
+            return managerId;
         }
 
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "권한이 없습니다.");

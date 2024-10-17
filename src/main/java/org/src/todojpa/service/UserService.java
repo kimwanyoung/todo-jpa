@@ -14,14 +14,14 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserResponseDto retrieveUserById(Long id) {
-        User user = findUserById(id);
+        User user = findUser(id);
 
         return UserResponseDto.from(user);
     }
 
     @Transactional
     public UserResponseDto updateUserById(Long id, String name, String email) {
-        User user = findUserById(id);
+        User user = findUser(id);
 
         user.update(name, email);
 
@@ -29,14 +29,14 @@ public class UserService {
     }
 
     public UserResponseDto deleteUserById(Long id) {
-        User user = findUserById(id);
+        User user = findUser(id);
 
         this.userRepository.delete(user);
 
         return UserResponseDto.from(user);
     }
 
-    public User findUserById(Long id) {
+    public User findUser(Long id) {
         return this.userRepository.findById(id).orElseThrow(() ->
                 new IllegalStateException("존재하지 않는 유저입니다.")
         );

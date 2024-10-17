@@ -52,4 +52,8 @@ public class User extends Timestamp {
     public boolean checkId(Long id) {
         return Objects.equals(this.id, id);
     }
+
+    public boolean isAdmin() {
+        return this.role.isAdmin();
+    }
 }
