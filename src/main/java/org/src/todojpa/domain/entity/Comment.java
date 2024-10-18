@@ -30,11 +30,11 @@ public class Comment extends Timestamp {
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
     public void update(String contents) {

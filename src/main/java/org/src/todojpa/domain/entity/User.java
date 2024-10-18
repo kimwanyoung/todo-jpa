@@ -40,13 +40,8 @@ public class User extends Timestamp {
     private UserRole role;
 
     public void update(String name, String email) {
-        if (name != null) {
-            this.name = name;
-        }
-
-        if (email != null) {
-            this.email = email;
-        }
+        this.name = name;
+        this.email = email;
     }
 
     public boolean checkId(Long id) {

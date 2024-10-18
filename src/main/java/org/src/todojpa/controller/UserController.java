@@ -1,5 +1,6 @@
 package org.src.todojpa.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class UserController {
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable Long id,
-            @RequestBody UserUpdateDto req
+            @RequestBody @Valid UserUpdateDto req
     ) {
         String name = req.getName();
         String email = req.getEmail();
